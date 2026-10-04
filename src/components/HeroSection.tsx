@@ -1,15 +1,7 @@
 import { motion } from "framer-motion";
-import { CheckCircle2, CalendarDays } from "lucide-react";
+import { CalendarDays } from "lucide-react";
 import CtaButton from "./ui/CtaButton";
-import VslPlayer from "./VslPlayer";
-import { scrollToCheckout } from "../lib/site";
-
-const bullets = [
-  "תדע איך ליצור קשר עם בעלי מקצוע שישלחו לך עסקאות טובות בכל חודש.",
-  "תנתח עסקה בפחות מ5 דקות, ותציע לפחות 5 הצעות נכונות ביום",
-  "תחזיק במערכת עבודה מסודרת שמייצרת ומגישה הצעות מחיר באופן עקבי בכל שבוע",
-  "תרכוש מהר את האמון של הסוכנים ובעלי המקצוע כך שירצו לעבוד איתך",
-];
+import { scrollToRegister } from "../lib/site";
 
 // Staggered entrance: badge, H1, subheadline, and CTA fade in + slide up on load.
 const container = {
@@ -24,7 +16,7 @@ const item = {
 export default function HeroSection() {
   return (
     <section
-      className="relative overflow-hidden px-5 pb-16 pt-12 sm:pt-16 md:pb-24"
+      className="relative overflow-hidden px-5 pb-16 pt-14 sm:pt-20 md:pb-24"
       aria-labelledby="hero-heading"
     >
       <motion.div
@@ -67,34 +59,6 @@ export default function HeroSection() {
           </span>
         </motion.p>
 
-        {/* Stable video dimensions from first render; click for sound. */}
-        <motion.div
-          variants={item}
-          className="mx-auto mt-9 w-full max-w-5xl"
-        >
-          <VslPlayer />
-        </motion.div>
-
-        {/* Bullets - 2-column grid, top-aligned for longer lines */}
-        <motion.ul
-          variants={item}
-          className="mx-auto mt-9 grid w-full max-w-3xl grid-cols-1 gap-3 sm:grid-cols-2"
-        >
-          {bullets.map((b) => (
-            <li
-              key={b}
-              className="flex items-start gap-3.5 rounded-2xl border border-drift/25 bg-cloud/[0.04] p-6 text-right text-lg font-semibold leading-relaxed text-cloud md:text-xl"
-            >
-              <CheckCircle2
-                className="mt-0.5 h-8 w-8 shrink-0 text-emerald-400"
-                strokeWidth={2.4}
-                aria-hidden="true"
-              />
-              <span>{b}</span>
-            </li>
-          ))}
-        </motion.ul>
-
         {/* Prominent dates + hours */}
         <motion.div
           variants={item}
@@ -117,7 +81,7 @@ export default function HeroSection() {
 
         {/* CTA */}
         <motion.div variants={item} className="mx-auto mt-8 w-full max-w-md">
-          <CtaButton onClick={scrollToCheckout}>
+          <CtaButton onClick={scrollToRegister}>
             שריין את המקום שלי בסדנה
           </CtaButton>
           <p className="mt-4 text-lg text-drift">
@@ -127,21 +91,6 @@ export default function HeroSection() {
             המקומות מוגבלים כדי לשמור על סשן שאלות ותשובות אישי בלייב.
           </p>
         </motion.div>
-      </motion.div>
-
-      {/* Relocated outcome statement - prominent, no label, no icon */}
-      <motion.div
-        initial={{ opacity: 0, y: 24 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6, delay: 0.7, ease: [0.22, 1, 0.36, 1] }}
-        className="mx-auto mt-16 max-w-4xl rounded-3xl bg-gold px-6 py-11 text-center text-night sm:px-12"
-      >
-        <h2 className="font-extrabold tracking-tight text-[clamp(1.9rem,4.5vw,3rem)] text-balance leading-[1.15]">
-          תיכנס ללפחות 2 חוזים בכל חודש
-        </h2>
-        <p className="mx-auto mt-4 max-w-xl text-xl font-semibold leading-relaxed text-night/85">
-          כך שתוכל לקנות ולמכור נכסים טובים ולהרוויח כסף כבר עכשיו
-        </p>
       </motion.div>
     </section>
   );

@@ -1,14 +1,7 @@
 import { useEffect, useState } from "react";
 import HeroSection from "./components/HeroSection";
-import LogisticsSection from "./components/LogisticsSection";
-import CurriculumSection from "./components/CurriculumSection";
-import ComparisonSection from "./components/ComparisonSection";
-import InstructorSection from "./components/InstructorSection";
-import ValueStack from "./components/ValueStack";
-import StudentSuccess from "./components/StudentSuccess";
-import CaseStudies from "./components/CaseStudies";
-import FaqSection from "./components/FaqSection";
-import OrderBumpCheckout from "./components/OrderBumpCheckout";
+import ValueSection from "./components/ValueSection";
+import RegistrationSection from "./components/RegistrationSection";
 import StickyMobileCTA from "./components/StickyMobileCTA";
 import ThankYouPage from "./components/ThankYouPage";
 import { initTracking, trackPurchase } from "./lib/track";
@@ -43,15 +36,8 @@ export default function App() {
     <div className="relative min-h-screen">
       <main className="pb-24 lg:pb-0">
         <HeroSection />
-        <CaseStudies />
-        <LogisticsSection />
-        <CurriculumSection />
-        <ComparisonSection />
-        <StudentSuccess />
-        <InstructorSection />
-        <ValueStack />
-        <FaqSection />
-        <OrderBumpCheckout bumpSelected={bumpSelected} onToggle={setBumpSelected} />
+        <ValueSection />
+        <RegistrationSection bumpSelected={bumpSelected} onToggle={setBumpSelected} />
       </main>
 
       <footer className="px-5 py-10 text-center">

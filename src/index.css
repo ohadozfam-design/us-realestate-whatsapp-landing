@@ -67,11 +67,6 @@
     text-wrap: balance;
   }
 
-  /* Accent text - solid Sea Buckthorn, crisp (no gradient). */
-  .gold-text {
-    color: #ffbf65;
-  }
-
   /* One consistent, high-contrast keyboard focus ring (gold on a dark gap),
      drawn with box-shadow so it is visible on any surface including the CTA. */
   .focus-ring:focus-visible {
@@ -79,11 +74,6 @@
     box-shadow:
       0 0 0 2px #13181b,
       0 0 0 4px #ffbf65;
-  }
-
-  /* Thin hairline divider */
-  .hairline {
-    @apply h-px w-full bg-drift/15;
   }
 }
 

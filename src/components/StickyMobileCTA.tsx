@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Lock } from "lucide-react";
-import { scrollToCheckout } from "../lib/site";
+import { scrollToRegister } from "../lib/site";
 
 export default function StickyMobileCTA() {
   const [visible, setVisible] = useState(false);
@@ -26,7 +26,7 @@ export default function StickyMobileCTA() {
         >
           <motion.button
             type="button"
-            onClick={scrollToCheckout}
+            onClick={scrollToRegister}
             whileTap={{ scale: 0.98 }}
             transition={{ type: "spring", stiffness: 400, damping: 25 }}
             className="focus-ring flex w-full items-center justify-center gap-2 rounded-full bg-gold px-5 py-3.5 text-lg font-bold tracking-tight text-night shadow-cta transition-colors hover:bg-[#ffca82]"

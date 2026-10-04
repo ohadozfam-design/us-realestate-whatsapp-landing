@@ -19,15 +19,6 @@ export default {
         card: "0 24px 70px -36px rgba(0,0,0,0.85)",
         cta: "0 14px 34px -14px rgba(255,191,101,0.45)",
       },
-      keyframes: {
-        "reveal-up": {
-          from: { opacity: "0", transform: "translateY(16px)" },
-          to: { opacity: "1", transform: "translateY(0)" },
-        },
-      },
-      animation: {
-        "reveal-up": "reveal-up 0.6s cubic-bezier(0.22,1,0.36,1) both",
-      },
     },
   },
   plugins: [],

@@ -18,15 +18,6 @@ function WhatsAppIcon({ className }: { className?: string }) {
   );
 }
 
-// Every bonus itemized with its own value, so the full stack ($888) is visible
-// against the $97 price. Mirrors the bonus list in the ValueStack section.
-const includedBonuses = [
-  { name: "מחשבון הניתוח המהיר", value: 297 },
-  { name: "תסריטי שיחה ומיילים מול סוכנים", value: 197 },
-  { name: "צ׳קליסט תמחור שיפוץ מהיר", value: 197 },
-  { name: "מדד איתור וניתוח שווקים צומחים", value: 197 },
-];
-
 type Props = {
   bumpSelected: boolean;
   onToggle: (v: boolean) => void;
@@ -43,7 +34,7 @@ function validateLead(lead: Lead): FieldErrors {
   return errs;
 }
 
-export default function OrderBumpCheckout({ bumpSelected, onToggle }: Props) {
+export default function RegistrationSection({ bumpSelected, onToggle }: Props) {
   const total = bumpSelected ? PRICING.withBump : PRICING.base;
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -142,7 +133,7 @@ export default function OrderBumpCheckout({ bumpSelected, onToggle }: Props) {
   }
 
   return (
-    <section id="checkout" className="scroll-mt-8 px-5 py-16 md:py-24" aria-labelledby="checkout-heading">
+    <section id="register" className="scroll-mt-6 px-5 py-16 md:py-24" aria-labelledby="checkout-heading">
       <div className="mx-auto max-w-2xl space-y-6">
         {/* Guarantee - relocated here, right above the pricing */}
         <div className="rounded-2xl border border-drift/15 bg-ateneo/25 p-7 sm:p-9">
@@ -159,8 +150,7 @@ export default function OrderBumpCheckout({ bumpSelected, onToggle }: Props) {
               <p className="mt-3 max-w-2xl text-xl leading-relaxed text-cloud/85">
                 „אם תשתתף בסדנה ותרגיש שלא קיבלת לפחות פי 10 מערך ההשקעה שלך, שלח
                 הודעה עד 24 שעות מסיום הסדנה וקבל בחזרה את מלוא הסכום ששילמת
-                (<span className="ltr-nums font-bold text-gold">$97</span>). כל המחשבונים
-                והתבניות נשארים אצלך.”
+                (<span className="ltr-nums font-bold text-gold">${PRICING.base}</span>).”
               </p>
             </div>
           </div>
@@ -193,10 +183,9 @@ export default function OrderBumpCheckout({ bumpSelected, onToggle }: Props) {
           <p className="mt-3 text-center text-sm text-drift">לחצו על התמונה לצפייה בגודל מלא</p>
         </figure>
 
-        {/* Checkout card - sticky CTA scroll target (the offer, not the guarantee) */}
+        {/* Checkout card */}
         <div
-          id="pricing"
-          className="scroll-mt-6 overflow-hidden rounded-2xl border border-drift/15 bg-ateneo/15 shadow-card"
+          className="overflow-hidden rounded-2xl border border-drift/15 bg-ateneo/15 shadow-card"
         >
           {/* header */}
           <div className="border-b border-drift/10 px-6 py-7 text-center sm:px-8">
@@ -244,44 +233,11 @@ export default function OrderBumpCheckout({ bumpSelected, onToggle }: Props) {
               <SoldOutWaitlist />
             ) : (
               <>
-                {/* Itemized value stack - every bonus listed with its own value */}
             <div className="space-y-3">
-              <div className="rounded-xl border border-drift/15 bg-night/40 p-4 sm:p-5">
-                <div className="flex items-center justify-between gap-3 border-b border-drift/[0.12] pb-3">
-                  <span className="text-lg font-bold text-cloud">
-                    כרטיס לסדנה הלייב · יומיים בלייב
-                  </span>
-                  <span className="shrink-0 text-sm font-extrabold uppercase tracking-wide text-emerald-400">
-                    כלול
-                  </span>
-                </div>
-                <ul className="mt-3.5 space-y-3">
-                  {includedBonuses.map((b, i) => (
-                    <li key={b.name} className="flex items-start justify-between gap-3">
-                      <span className="flex items-start gap-2 text-base font-semibold text-cloud/90">
-                        <Check
-                          className="mt-0.5 h-5 w-5 shrink-0 text-emerald-400"
-                          strokeWidth={3}
-                          aria-hidden="true"
-                        />
-                        <span>
-                          <span className="text-drift">בונוס {String(i + 1).padStart(2, "0")}: </span>
-                          {b.name}
-                        </span>
-                      </span>
-                      <span className="ltr-nums shrink-0 text-base font-bold text-drift">
-                        שווי ${b.value}
-                      </span>
-                    </li>
-                  ))}
-                </ul>
-                <div className="mt-4 flex items-center justify-between border-t border-drift/[0.12] pt-3.5">
-                  <span className="text-base font-bold text-cloud">שווי כולל</span>
-                  <span className="ltr-nums text-2xl font-extrabold text-drift line-through decoration-coral/80 decoration-2">
-                    ${PRICING.totalStackValue}
-                  </span>
-                </div>
-              </div>
+              <LineItem
+                label="כרטיס לסדנה הלייב · יומיים בלייב"
+                price={`$${PRICING.base}`}
+              />
               <AnimatePresence initial={false}>
                 {bumpSelected && (
                   <motion.div

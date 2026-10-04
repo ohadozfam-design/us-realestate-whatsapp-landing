@@ -11,7 +11,6 @@ export const SITE = {
   eventFormatShort: "יומיים בלייב בזום · שעתיים בכל יום",
   day1: { date: "6 באוקטובר", label: "יום שלישי" },
   day2: { date: "7 באוקטובר", label: "יום רביעי" },
-  checkoutHref: "#pricing",
 } as const;
 
 export const PRICING = {
@@ -20,13 +19,12 @@ export const PRICING = {
   get withBump() {
     return this.base + this.orderBump;
   },
-  totalStackValue: 888,
   bumpOriginal: 197,
 } as const;
 
-export const scrollToCheckout = () => {
-  // Prefer the pricing/checkout card itself so the sticky CTA lands on the offer,
-  // not the guarantee block that sits at the top of the checkout section.
-  const el = document.getElementById("pricing") || document.getElementById("checkout");
-  if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
+export const scrollToRegister = () => {
+  const el = document.getElementById("register");
+  if (!el) return;
+  const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  el.scrollIntoView({ behavior: reduce ? "auto" : "smooth", block: "start" });
 };
