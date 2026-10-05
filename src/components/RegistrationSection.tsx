@@ -127,7 +127,7 @@ export default function RegistrationSection() {
 
         <figure className="overflow-hidden rounded-2xl border border-gold/30 bg-cloud/[0.04] p-4 shadow-card sm:p-6">
           <figcaption className="mb-4 text-center">
-            <p className="text-sm font-bold text-gold">בוגר הסדנה מספר</p>
+            <p className="text-sm font-bold text-gold">בוגר K2 מספר</p>
             <blockquote className="mt-2 text-balance text-2xl font-extrabold leading-snug text-cloud sm:text-3xl">
               ״זה סדנא של 400 דולר פלוס״
             </blockquote>
@@ -167,10 +167,10 @@ export default function RegistrationSection() {
             <div className="mt-6 flex flex-col items-center gap-3.5">
               <div className="inline-flex flex-wrap items-center justify-center gap-x-2.5 gap-y-1 rounded-full border border-gold/30 bg-gold/10 px-5 py-2 text-lg font-bold text-gold">
                 <CalendarDays className="h-5 w-5" strokeWidth={2.2} aria-hidden="true" />
-                <span>{SITE.eventDates}</span>
+                <span>{SITE.eventDay}, {SITE.eventDate}</span>
                 <span className="text-gold/50" aria-hidden="true">|</span>
                 <span>
-                  <span className="ltr-nums">18:00</span> עד <span className="ltr-nums">20:00</span>
+                  <span className="ltr-nums">{SITE.startTime}</span> עד <span className="ltr-nums">{SITE.endTime}</span>
                 </span>
                 <span className="text-base font-semibold text-gold/80">(שעון ישראל)</span>
               </div>

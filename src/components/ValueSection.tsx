@@ -11,7 +11,7 @@ const outcomes = [
 ];
 
 const details = [
-  { label: "מתי", body: `${SITE.eventDates} · ${SITE.eventHours}` },
+  { label: "מתי", body: `${SITE.eventDay}, ${SITE.eventDate} · ${SITE.eventHours}` },
   { label: "איפה", body: "שידור חי אינטראקטיבי בזום, כולל סשן שאלות ותשובות פתוח" },
   { label: "למי זה מתאים", body: "למשקיעים ויזמים שרוצים להכנס ללפחות 2 עסקאות בחודש" },
   { label: "מה להכין", body: "מחשב נייד, מחברת וראש פתוח לפרקטיקה" },
@@ -23,12 +23,12 @@ export default function ValueSection() {
       <div className="mx-auto max-w-5xl">
         <Reveal>
           <div className="text-center">
-            <span className="eyebrow">מה מקבלים בסדנה</span>
+            <span className="eyebrow">מה מקבלים בוובינר</span>
             <h2
               id="value-heading"
               className="mx-auto mt-5 max-w-3xl text-balance font-extrabold leading-tight tracking-tight text-cloud text-[clamp(2rem,4.8vw,3.3rem)]"
             >
-              {SITE.eventFormatShort}, ובסופם יש לך מנוע עסקאות שעובד
+              {SITE.eventFormatShort}, ובסופה יש לך מנוע עסקאות שעובד
             </h2>
           </div>
         </Reveal>
@@ -63,7 +63,7 @@ export default function ValueSection() {
 
         <Reveal delay={0.12}>
           <div className="mx-auto mt-10 w-full max-w-md">
-            <CtaButton onClick={scrollToRegister}>שריין את המקום שלי בסדנה</CtaButton>
+            <CtaButton onClick={scrollToRegister}>שריין את המקום שלי בוובינר</CtaButton>
           </div>
         </Reveal>
       </div>

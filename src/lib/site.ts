@@ -2,18 +2,17 @@
 // Swap the placeholders below with the real event details before launch.
 
 export const SITE = {
-  // Two concentrated days, two live hours each (18:00 to 20:00 Israel time).
-  // Two concentrated days: 6 October (day 1) and 7 October (day 2), 2026.
-  eventDates: "6 & 7 באוקטובר",
-  eventHours: "18:00 עד 20:00 (שעון ישראל)",
-  eventDatesFull: "6 & 7 באוקטובר · 18:00 עד 20:00 (שעון ישראל)",
-  eventFormat: "יומיים מרוכזים · שעתיים בכל יום בלייב בזום",
-  eventFormatShort: "יומיים בלייב בזום · שעתיים בכל יום",
-  // iso + start/end (Israel local time) feed the "add to Google Calendar" links.
-  day1: { date: "6 באוקטובר", label: "יום שלישי", iso: "2026-10-06" },
-  day2: { date: "7 באוקטובר", label: "יום רביעי", iso: "2026-10-07" },
+  // One live session: Tuesday 13 October 2026, 18:00-19:00 Israel time.
+  eventDate: "13 באוקטובר",
+  eventDay: "יום שלישי",
+  eventYear: "2026",
+  eventHours: "18:00 עד 19:00 (שעון ישראל)",
+  eventFormat: "שידור לייב אחד בזום · שעה אחת",
+  eventFormatShort: "שעה אחת בלייב בזום",
+  // iso + start/end (Israel local time) feed the "add to Google Calendar" link.
+  iso: "2026-10-13",
   startTime: "18:00",
-  endTime: "20:00",
+  endTime: "19:00",
   timeZone: "Asia/Jerusalem",
 } as const;
 

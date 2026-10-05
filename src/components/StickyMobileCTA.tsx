@@ -43,7 +43,7 @@ export default function StickyMobileCTA() {
             className="focus-ring flex w-full items-center justify-center gap-2 rounded-full bg-gold px-5 py-3.5 text-lg font-bold tracking-tight text-night shadow-cta transition-colors hover:bg-[#ffca82]"
           >
             <Lock className="h-[18px] w-[18px]" strokeWidth={2.5} aria-hidden="true" />
-            שריין מקום בסדנה
+            שריין מקום בוובינר
           </motion.button>
         </motion.div>
       )}

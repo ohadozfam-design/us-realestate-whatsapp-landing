@@ -16,13 +16,13 @@ import WhatsAppIcon from "./ui/WhatsAppIcon";
 const WHATSAPP_GROUP_URL =
   import.meta.env.VITE_WHATSAPP_GROUP_URL || "https://tinyurl.com/mesahkimnadlan";
 
-/** Google Calendar "add event" link for one session, in Israel local time. */
-function googleCalendarUrl(session: number, isoDate: string): string {
-  const day = isoDate.replace(/-/g, "");
+/** Google Calendar "add event" link for the live session, in Israel local time. */
+function googleCalendarUrl(): string {
+  const day = SITE.iso.replace(/-/g, "");
   const time = (t: string) => t.replace(":", "") + "00";
   const params = new URLSearchParams({
     action: "TEMPLATE",
-    text: `סדנת מנוע העסקאות · מפגש ${session}`,
+    text: "וובינר מנוע העסקאות · לייב בזום",
     dates: `${day}T${time(SITE.startTime)}/${day}T${time(SITE.endTime)}`,
     ctz: SITE.timeZone,
     details: "שידור חי בזום. הקישור לזום יישלח במייל ובקבוצת ה-WhatsApp לפני השידור.",
@@ -34,7 +34,7 @@ function googleCalendarUrl(session: number, isoDate: string): string {
 /**
  * Post-registration thank-you page. The registration form redirects here
  * (/thank-you) after the lead is sent. It confirms the signup and explains
- * what arrives next (confirmation email with the Zoom link + session dates).
+ * what arrives next (confirmation email with the Zoom link + session date).
  */
 export default function ThankYouPage() {
   return (
@@ -56,7 +56,7 @@ export default function ThankYouPage() {
             ההרשמה שלך לוובינר אושרה!
           </h1>
           <p className="mx-auto mt-4 max-w-xl text-lg leading-relaxed text-drift sm:text-xl">
-            שמחים שהצטרפת. כל פרטי ההתחברות לסדנה כבר בדרך אליך למייל, ורוב
+            שמחים שהצטרפת. כל פרטי ההתחברות לוובינר כבר בדרך אליך למייל, ורוב
             הפרטים שתצטרך נמצאים כאן למטה.
           </p>
         </div>
@@ -67,10 +67,11 @@ export default function ThankYouPage() {
             <WhatsAppIcon className="h-8 w-8 text-[#25D366]" />
           </span>
           <h2 className="mt-4 text-balance text-2xl font-extrabold tracking-tight text-cloud sm:text-3xl">
-            שלב אחרון: הצטרפות לקבוצת העדכונים השקטה
+            שלב אחרון: הצטרפות לקבוצת ה-WhatsApp של הוובינר
           </h2>
           <p className="mx-auto mt-3 max-w-lg text-lg leading-relaxed text-drift">
-            הלינק הישיר לזום ותזכורות יישלחו ישירות לשם לפני השידור.
+            הקבוצה פתוחה לשאלות, דיונים, וכמובן קבלת הלינק הישיר לשידור הלייב
+            ותזכורות בזמן אמת.
           </p>
           <a
             href={WHATSAPP_GROUP_URL}
@@ -81,31 +82,23 @@ export default function ThankYouPage() {
             <WhatsAppIcon className="h-6 w-6 shrink-0" />
             הצטרפות לקבוצת ה-WhatsApp ←
           </a>
-          <p className="mt-3 text-base text-drift">
-            קבוצה שקטה: רק הודעות מהצוות, בלי הודעות מהמשתתפים.
-          </p>
         </div>
 
-        {/* Add both sessions to Google Calendar */}
-        <div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2">
-          {[SITE.day1, SITE.day2].map((d, i) => (
-            <a
-              key={d.iso}
-              href={googleCalendarUrl(i + 1, d.iso)}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="focus-ring flex items-center justify-center gap-3 rounded-xl border border-drift/25 bg-cloud/[0.04] px-4 py-3.5 text-base font-bold text-cloud transition-colors hover:border-gold/50 hover:bg-cloud/[0.07]"
-            >
-              <CalendarPlus className="h-6 w-6 shrink-0 text-gold" strokeWidth={2.2} aria-hidden="true" />
-              <span className="flex flex-col text-right leading-snug">
-                <span>הוספה ליומן Google</span>
-                <span className="text-sm font-semibold text-drift">
-                  מפגש {i + 1} · {d.date}
-                </span>
-              </span>
-            </a>
-          ))}
-        </div>
+        {/* Add the session to Google Calendar */}
+        <a
+          href={googleCalendarUrl()}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="focus-ring mt-4 flex items-center justify-center gap-3 rounded-xl border border-drift/25 bg-cloud/[0.04] px-4 py-3.5 text-base font-bold text-cloud transition-colors hover:border-gold/50 hover:bg-cloud/[0.07]"
+        >
+          <CalendarPlus className="h-6 w-6 shrink-0 text-gold" strokeWidth={2.2} aria-hidden="true" />
+          <span className="flex flex-col text-right leading-snug">
+            <span>הוספה ליומן Google</span>
+            <span className="text-sm font-semibold text-drift">
+              {SITE.eventDay}, {SITE.eventDate} · {SITE.startTime}
+            </span>
+          </span>
+        </a>
 
         <EventTicket />
 
@@ -132,7 +125,7 @@ export default function ThankYouPage() {
                 </div>
                 <p className="mt-1.5 text-base leading-relaxed text-drift sm:text-lg">
                   שלחנו אליך עכשיו מייל אישור עם <strong className="text-cloud">הקישור לזום</strong>{" "}
-                  ועם כל פרטי ההתחברות לשני המפגשים. המייל מגיע לכתובת שאיתה נרשמת,
+                  ועם כל פרטי ההתחברות לשידור. המייל מגיע לכתובת שאיתה נרשמת,
                   בדרך כלל תוך דקות ספורות.
                 </p>
               </div>
@@ -156,18 +149,18 @@ export default function ThankYouPage() {
               </div>
             </li>
 
-            {/* Step 3 - day of the workshop */}
+            {/* Step 3 - day of the webinar */}
             <li className="flex items-start gap-4">
               <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-gold/15">
                 <Video className="h-6 w-6 text-gold" strokeWidth={2.2} aria-hidden="true" />
               </div>
               <div>
                 <span className="text-lg font-extrabold text-cloud sm:text-xl">
-                  ביום הסדנה: נכנסים דרך אותו קישור
+                  ביום הוובינר: נכנסים דרך אותו קישור
                 </span>
                 <p className="mt-1.5 text-base leading-relaxed text-drift sm:text-lg">
-                  בכל אחד משני המפגשים מתחברים לזום דרך הקישור שבמייל האישור, מכל
-                  מחשב או נייד. מומלץ להתחבר כ-5 דקות לפני תחילת המפגש.
+                  מתחברים לזום דרך הקישור שבמייל האישור או בקבוצת ה-WhatsApp, מכל
+                  מחשב או נייד. מומלץ להתחבר כ-5 דקות לפני תחילת השידור.
                 </p>
               </div>
             </li>
@@ -177,35 +170,25 @@ export default function ThankYouPage() {
         {/* Event details card */}
         <div className="mt-8 rounded-2xl border border-gold/30 bg-gold/[0.06] p-6 sm:p-8">
           <h2 className="text-2xl font-extrabold tracking-tight text-cloud sm:text-3xl">
-            מועדי הסדנה
+            מועד הוובינר
           </h2>
           <p className="mt-1.5 text-base font-semibold text-drift sm:text-lg">
             {SITE.eventFormat}
           </p>
 
-          <div className="mt-6 space-y-4">
-            {[SITE.day1, SITE.day2].map((d, i) => (
-              <div
-                key={d.date}
-                className="flex flex-wrap items-center gap-x-3 gap-y-1 rounded-xl border border-drift/15 bg-night/40 px-5 py-4"
-              >
-                <CalendarDays className="h-6 w-6 shrink-0 text-gold" strokeWidth={2.2} aria-hidden="true" />
-                <span className="rounded-full bg-gold/15 px-3 py-1 text-base font-extrabold text-gold sm:text-lg">
-                  מפגש {i + 1}
-                </span>
-                <span className="text-lg font-extrabold text-cloud sm:text-xl">
-                  {d.label}, {d.date}
-                </span>
-                <span className="mr-auto flex items-center gap-1.5 text-base font-bold text-drift sm:text-lg">
-                  <Clock className="h-5 w-5" strokeWidth={2.2} aria-hidden="true" />
-                  {SITE.eventHours}
-                </span>
-              </div>
-            ))}
+          <div className="mt-6 flex flex-wrap items-center gap-x-3 gap-y-1 rounded-xl border border-drift/15 bg-night/40 px-5 py-4">
+            <CalendarDays className="h-6 w-6 shrink-0 text-gold" strokeWidth={2.2} aria-hidden="true" />
+            <span className="text-lg font-extrabold text-cloud sm:text-xl">
+              {SITE.eventDay}, {SITE.eventDate}
+            </span>
+            <span className="mr-auto flex items-center gap-1.5 text-base font-bold text-drift sm:text-lg">
+              <Clock className="h-5 w-5" strokeWidth={2.2} aria-hidden="true" />
+              {SITE.eventHours}
+            </span>
           </div>
 
           <p className="mt-5 text-base leading-relaxed text-drift sm:text-lg">
-            טיפ: הוסף את שני המועדים ליומן עכשיו כדי לא לפספס, ושמור את מייל האישור
+            טיפ: הוסף את המועד ליומן עכשיו כדי לא לפספס, ושמור את מייל האישור
             בהישג יד, הקישור לזום נמצא בו.
           </p>
         </div>
@@ -229,7 +212,7 @@ export default function ThankYouPage() {
         {/* Signature */}
         <div className="mt-14 border-t border-drift/10 pt-8 text-center">
           <p className="text-lg font-extrabold tracking-tight text-cloud">
-            סדנת מנוע העסקאות ל2 נכסים בחודש
+            וובינר מנוע העסקאות ל2 נכסים בחודש
           </p>
           <p className="mt-1 text-sm font-semibold text-drift">עם אוהד עוז</p>
         </div>

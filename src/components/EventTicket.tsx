@@ -2,7 +2,7 @@ import { BadgeCheck, CalendarDays, Ticket, Video } from "lucide-react";
 import { SITE } from "../lib/site";
 
 /** Uneven bar widths read as a barcode; purely decorative. */
-const TICKET_ID = "K2-1006";
+const TICKET_ID = "K2-1013";
 
 const BARCODE =
   "repeating-linear-gradient(90deg, currentColor 0 2px, transparent 2px 4px, currentColor 4px 7px, transparent 7px 9px, currentColor 9px 10px, transparent 10px 13px, currentColor 13px 15px, transparent 15px 16px)";
@@ -25,18 +25,18 @@ export default function EventTicket() {
         </div>
 
         <p className="mt-5 text-balance text-2xl font-extrabold leading-[1.2] tracking-tight text-cloud sm:text-3xl">
-          סדנת מנוע העסקאות
+          וובינר מנוע העסקאות
         </p>
 
         <dl className="mt-6 grid min-w-0 gap-5">
           <div>
-            <dt className="text-sm font-bold tracking-normal text-drift">מועדים</dt>
+            <dt className="text-sm font-bold tracking-normal text-drift">מועד</dt>
             <dd className="mt-1.5 flex items-start gap-2 text-lg font-bold text-cloud">
               <CalendarDays className="mt-1 h-5 w-5 shrink-0 text-gold" strokeWidth={2.2} aria-hidden="true" />
               <span>
-                {SITE.eventDates} 2026
+                {SITE.eventDay}, {SITE.eventDate} {SITE.eventYear}
                 <span className="block text-base font-semibold text-drift">
-                  <span className="ltr-nums">18:00 - 20:00</span> (שעון ישראל)
+                  <span className="ltr-nums">{SITE.startTime} - {SITE.endTime}</span> (שעון ישראל)
                 </span>
               </span>
             </dd>

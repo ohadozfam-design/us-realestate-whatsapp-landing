@@ -38,11 +38,11 @@ export default function App() {
 
       <footer className="px-5 py-10 text-center">
         <p className="text-lg font-extrabold tracking-tight text-cloud">
-          סדנת מנוע העסקאות ל2 נכסים בחודש
+          וובינר מנוע העסקאות ל2 נכסים בחודש
         </p>
         <p className="mt-1 text-sm font-semibold text-drift">עם אוהד עוז</p>
         <p className="mx-auto mt-5 max-w-2xl text-sm leading-relaxed text-drift">
-          כל הזכויות שמורות · הסדנה הינה תוכן חינוכי ופרקטי ואינה מהווה ייעוץ
+          כל הזכויות שמורות · הוובינר הינו תוכן חינוכי ופרקטי ואינה מהווה ייעוץ
           השקעות, ייעוץ מס או ייעוץ משפטי. תוצאות עשויות להשתנות בהתאם ליישום בפועל.
         </p>
       </footer>

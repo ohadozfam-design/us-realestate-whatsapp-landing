@@ -1,7 +1,7 @@
 import { motion } from "framer-motion";
 import { CalendarDays } from "lucide-react";
 import CtaButton from "./ui/CtaButton";
-import { scrollToRegister } from "../lib/site";
+import { SITE, scrollToRegister } from "../lib/site";
 
 // Staggered entrance: badge, H1, subheadline, and CTA fade in + slide up on load.
 const container = {
@@ -34,7 +34,7 @@ export default function HeroSection() {
             <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-red-500 opacity-75" />
             <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-red-500" />
           </span>
-          סדנה אונליין
+          וובינר לייב בזום
         </motion.div>
 
         {/* Centered headline - stretches across the width on desktop */}
@@ -43,7 +43,7 @@ export default function HeroSection() {
           id="hero-heading"
           className="mx-auto mt-7 w-full max-w-5xl text-center font-extrabold leading-[1.15] sm:leading-[1.1] text-balance tracking-tight text-cloud text-4xl sm:text-5xl lg:text-6xl"
         >
-          <span className="text-gold">ב-4 שעות בלייב</span> נקים מנוע עסקאות שיסגור
+          <span className="text-gold">בשעה אחת בלייב</span> נקים מנוע עסקאות שיסגור
           לך 2 עסקאות בחודש
         </motion.h1>
 
@@ -67,14 +67,14 @@ export default function HeroSection() {
           <span className="inline-flex items-center gap-2.5">
             <CalendarDays className="h-6 w-6 shrink-0 text-gold" strokeWidth={2.2} aria-hidden="true" />
             <span className="text-2xl font-extrabold text-gold sm:text-3xl">
-              6 &amp; 7 באוקטובר
+              {SITE.eventDay}, {SITE.eventDate}
             </span>
           </span>
           <span className="hidden text-gold/40 sm:block" aria-hidden="true">
             |
           </span>
           <span className="text-lg font-bold text-cloud sm:text-xl">
-            <span className="ltr-nums">18:00</span> עד <span className="ltr-nums">20:00</span>
+            <span className="ltr-nums">{SITE.startTime}</span> עד <span className="ltr-nums">{SITE.endTime}</span>
           </span>
           <span className="text-base font-semibold text-drift">(שעון ישראל)</span>
         </motion.div>
@@ -82,7 +82,7 @@ export default function HeroSection() {
         {/* CTA */}
         <motion.div variants={item} className="mx-auto mt-8 w-full max-w-md">
           <CtaButton onClick={scrollToRegister}>
-            שריין את המקום שלי בסדנה
+            שריין את המקום שלי בוובינר
           </CtaButton>
           <p className="mt-4 text-lg text-drift">
             100% חינם · ללא כרטיס אשראי · ללא התחייבות
