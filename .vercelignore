@@ -1,0 +1,10 @@
+# Never upload local secrets or working material to Vercel.
+.env
+.env.*
+!.env.example
+photos/
+dist/
+node_modules/
+claude-project-template copy/
+*.tsbuildinfo
+.DS_Store
