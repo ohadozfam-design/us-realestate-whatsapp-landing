@@ -7,11 +7,28 @@ import {
   Clock,
   Inbox,
   ArrowLeft,
+  CalendarPlus,
 } from "lucide-react";
 import { SITE } from "../lib/site";
 import EventTicket from "./EventTicket";
+import WhatsAppIcon from "./ui/WhatsAppIcon";
 
-const WHATSAPP_GROUP_URL = "https://tinyurl.com/mesahkimnadlan";
+const WHATSAPP_GROUP_URL = import.meta.env.VITE_WHATSAPP_GROUP_URL || "#";
+
+/** Google Calendar "add event" link for one session, in Israel local time. */
+function googleCalendarUrl(session: number, isoDate: string): string {
+  const day = isoDate.replace(/-/g, "");
+  const time = (t: string) => t.replace(":", "") + "00";
+  const params = new URLSearchParams({
+    action: "TEMPLATE",
+    text: `סדנת מנוע העסקאות · מפגש ${session}`,
+    dates: `${day}T${time(SITE.startTime)}/${day}T${time(SITE.endTime)}`,
+    ctz: SITE.timeZone,
+    details: "שידור חי בזום. הקישור לזום יישלח במייל ובקבוצת ה-WhatsApp לפני השידור.",
+    location: "Zoom",
+  });
+  return `https://calendar.google.com/calendar/render?${params}`;
+}
 
 /**
  * Post-registration thank-you page. The registration form redirects here
@@ -44,17 +61,50 @@ export default function ThankYouPage() {
         </div>
 
         {/* WhatsApp group - the primary next action after signup */}
-        <a
-          href={WHATSAPP_GROUP_URL}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="focus-ring mt-8 flex w-full items-center justify-center rounded-full bg-[#25D366] px-6 py-4 text-center text-lg font-extrabold text-night shadow-[0_10px_30px_-10px_rgba(37,211,102,0.6)] transition duration-200 hover:bg-[#1fbd5b] motion-safe:hover:-translate-y-0.5 sm:text-xl"
-        >
-          📲 הצטרפות לקבוצת הוואטסאפ השקטה של הסדנה
-        </a>
-        <p className="mt-3 text-center text-base text-drift">
-          קבוצה שקטה: רק הודעות מהצוות, בלי הודעות מהמשתתפים.
-        </p>
+        <div className="mt-8 rounded-2xl border border-[#25D366]/40 bg-[#25D366]/[0.08] p-6 text-center sm:p-8">
+          <span className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-[#25D366]/15">
+            <WhatsAppIcon className="h-8 w-8 text-[#25D366]" />
+          </span>
+          <h2 className="mt-4 text-balance text-2xl font-extrabold tracking-tight text-cloud sm:text-3xl">
+            שלב אחרון: הצטרפות לקבוצת העדכונים השקטה
+          </h2>
+          <p className="mx-auto mt-3 max-w-lg text-lg leading-relaxed text-drift">
+            הלינק הישיר לזום ותזכורות יישלחו ישירות לשם לפני השידור.
+          </p>
+          <a
+            href={WHATSAPP_GROUP_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="focus-ring mt-6 inline-flex w-full items-center justify-center gap-2.5 rounded-full bg-[#25D366] px-6 py-4 text-lg font-extrabold text-night shadow-[0_10px_30px_-10px_rgba(37,211,102,0.6)] transition duration-200 hover:bg-[#1fbd5b] motion-safe:hover:-translate-y-0.5 sm:text-xl"
+          >
+            <WhatsAppIcon className="h-6 w-6 shrink-0" />
+            הצטרפות לקבוצת ה-WhatsApp ←
+          </a>
+          <p className="mt-3 text-base text-drift">
+            קבוצה שקטה: רק הודעות מהצוות, בלי הודעות מהמשתתפים.
+          </p>
+        </div>
+
+        {/* Add both sessions to Google Calendar */}
+        <div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2">
+          {[SITE.day1, SITE.day2].map((d, i) => (
+            <a
+              key={d.iso}
+              href={googleCalendarUrl(i + 1, d.iso)}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="focus-ring flex items-center justify-center gap-3 rounded-xl border border-drift/25 bg-cloud/[0.04] px-4 py-3.5 text-base font-bold text-cloud transition-colors hover:border-gold/50 hover:bg-cloud/[0.07]"
+            >
+              <CalendarPlus className="h-6 w-6 shrink-0 text-gold" strokeWidth={2.2} aria-hidden="true" />
+              <span className="flex flex-col text-right leading-snug">
+                <span>הוספה ליומן Google</span>
+                <span className="text-sm font-semibold text-drift">
+                  מפגש {i + 1} · {d.date}
+                </span>
+              </span>
+            </a>
+          ))}
+        </div>
 
         <EventTicket />
 

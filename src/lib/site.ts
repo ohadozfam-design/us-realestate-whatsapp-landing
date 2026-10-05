@@ -9,8 +9,12 @@ export const SITE = {
   eventDatesFull: "6 & 7 באוקטובר · 18:00 עד 20:00 (שעון ישראל)",
   eventFormat: "יומיים מרוכזים · שעתיים בכל יום בלייב בזום",
   eventFormatShort: "יומיים בלייב בזום · שעתיים בכל יום",
-  day1: { date: "6 באוקטובר", label: "יום שלישי" },
-  day2: { date: "7 באוקטובר", label: "יום רביעי" },
+  // iso + start/end (Israel local time) feed the "add to Google Calendar" links.
+  day1: { date: "6 באוקטובר", label: "יום שלישי", iso: "2026-10-06" },
+  day2: { date: "7 באוקטובר", label: "יום רביעי", iso: "2026-10-07" },
+  startTime: "18:00",
+  endTime: "20:00",
+  timeZone: "Asia/Jerusalem",
 } as const;
 
 export const scrollToRegister = () => {
