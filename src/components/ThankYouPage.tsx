@@ -13,7 +13,8 @@ import { SITE } from "../lib/site";
 import EventTicket from "./EventTicket";
 import WhatsAppIcon from "./ui/WhatsAppIcon";
 
-const WHATSAPP_GROUP_URL = import.meta.env.VITE_WHATSAPP_GROUP_URL || "#";
+const WHATSAPP_GROUP_URL =
+  import.meta.env.VITE_WHATSAPP_GROUP_URL || "https://tinyurl.com/mesahkimnadlan";
 
 /** Google Calendar "add event" link for one session, in Israel local time. */
 function googleCalendarUrl(session: number, isoDate: string): string {
