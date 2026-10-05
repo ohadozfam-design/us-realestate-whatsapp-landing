@@ -2,6 +2,10 @@
 // Swap the placeholders below with the real event details before launch.
 
 export const SITE = {
+  // Main headline (hero, <title>, og/twitter tags and og-cover.jpg mirror it).
+  // headlineAccent is the part of the headline rendered in gold.
+  headline: "איך לקנות נדל״ן בארה״ב בצורה עקבית ורציפה בכל חודש",
+  headlineAccent: "בצורה עקבית ורציפה",
   // One live session: Tuesday 13 October 2026, 18:00-19:00 Israel time.
   eventDate: "13 באוקטובר",
   eventDay: "יום שלישי",

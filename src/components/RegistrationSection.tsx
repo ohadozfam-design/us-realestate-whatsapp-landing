@@ -1,5 +1,5 @@
 import { useState, type FormEvent } from "react";
-import { Check, ShieldCheck, AlertCircle, CalendarDays } from "lucide-react";
+import { Check, AlertCircle, CalendarDays } from "lucide-react";
 import CtaButton from "./ui/CtaButton";
 import WhatsAppIcon from "./ui/WhatsAppIcon";
 import { SITE } from "../lib/site";
@@ -105,26 +105,6 @@ export default function RegistrationSection() {
   return (
     <section id="register" className="scroll-mt-6 px-5 py-16 md:py-24" aria-labelledby="register-heading">
       <div className="mx-auto max-w-2xl space-y-6">
-        {/* Trust box - free, no commitment */}
-        <div className="rounded-2xl border border-drift/15 bg-ateneo/25 p-7 sm:p-9">
-          <div className="flex flex-col gap-5 sm:flex-row sm:items-start sm:gap-7">
-            <ShieldCheck
-              className="mx-auto h-11 w-11 shrink-0 text-gold sm:mx-0"
-              strokeWidth={1.6}
-              aria-hidden="true"
-            />
-            <div className="text-center sm:text-right">
-              <h2 className="text-2xl font-extrabold tracking-tight text-cloud sm:text-3xl">
-                100% חינם, בלי התחייבות
-              </h2>
-              <p className="mt-3 max-w-2xl text-xl leading-relaxed text-cloud/85">
-                ההשתתפות בוובינר ללא עלות וללא כרטיס אשראי. ממלאים פרטים, מקבלים
-                את הקישור לזום ומגיעים ללמוד.
-              </p>
-            </div>
-          </div>
-        </div>
-
         <figure className="overflow-hidden rounded-2xl border border-gold/30 bg-cloud/[0.04] p-4 shadow-card sm:p-6">
           <figcaption className="mb-4 text-center">
             <p className="text-sm font-bold text-gold">בוגר K2 מספר</p>

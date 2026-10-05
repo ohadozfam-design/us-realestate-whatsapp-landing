@@ -13,6 +13,8 @@ const item = {
   show: { opacity: 1, y: 0, transition: { duration: 0.6, ease: [0.22, 1, 0.36, 1] } },
 };
 
+const [headlineBefore, headlineAfter] = SITE.headline.split(SITE.headlineAccent);
+
 export default function HeroSection() {
   return (
     <section
@@ -43,8 +45,9 @@ export default function HeroSection() {
           id="hero-heading"
           className="mx-auto mt-7 w-full max-w-5xl text-center font-extrabold leading-[1.15] sm:leading-[1.1] text-balance tracking-tight text-cloud text-4xl sm:text-5xl lg:text-6xl"
         >
-          <span className="text-gold">בשעה אחת בלייב</span> נקים מנוע עסקאות שיסגור
-          לך 2 עסקאות בחודש
+          {headlineBefore}
+          <span className="text-gold">{SITE.headlineAccent}</span>
+          {headlineAfter}
         </motion.h1>
 
         {/* Subheadline */}
