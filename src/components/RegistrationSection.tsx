@@ -107,8 +107,8 @@ export default function RegistrationSection() {
       <div className="mx-auto max-w-2xl space-y-6">
         {/* Testimonial - social proof above the form, framed and toned down.
             CTAs scroll past it straight to the first input (scrollToRegister). */}
-        <figure className="rounded-2xl border border-drift/15 bg-cloud/[0.03] p-5 sm:p-6">
-          <figcaption className="mb-4 text-center">
+        <figure className="rounded-2xl border border-drift/15 bg-cloud/[0.03] p-3 sm:p-4">
+          <figcaption className="mb-4 mt-2 text-center">
             <p className="eyebrow">בוגר K2 מספר</p>
             <blockquote className="mt-2 text-balance text-xl font-extrabold leading-snug text-cloud sm:text-2xl">
               ״זה סדנא של 400 דולר פלוס״
@@ -118,7 +118,7 @@ export default function RegistrationSection() {
             href="/case-studies/case-1.jpg"
             target="_blank"
             rel="noopener noreferrer"
-            className="focus-ring mx-auto block max-w-md overflow-hidden rounded-xl opacity-90 ring-1 ring-drift/20 transition-opacity duration-200 hover:opacity-100"
+            className="focus-ring block w-full overflow-hidden rounded-xl ring-1 ring-drift/20"
             aria-label="פתיחת עדות הבוגר בגודל מלא"
           >
             <img
