@@ -1,27 +1,34 @@
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Lock } from "lucide-react";
 import { scrollToRegister } from "../lib/site";
 
+/**
+ * Mobile-only bottom CTA. Shown only on the stretch between the hero and the
+ * form: hidden at the top, hidden once the form reaches the screen (and for
+ * the rest of the page, so it never covers the form or the footer), and
+ * hidden while an inline CTA ([data-cta]) is visible to avoid duplicates.
+ */
 export default function StickyMobileCTA() {
-  const [scrolled, setScrolled] = useState(false);
-  const [registerInView, setRegisterInView] = useState(false);
-  const visible = scrolled && !registerInView;
+  const [visible, setVisible] = useState(false);
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 640);
-    onScroll();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
-
-  // Hide while the registration form is on screen so the bar never covers it.
-  useEffect(() => {
-    const el = document.getElementById("register");
-    if (!el || typeof IntersectionObserver === "undefined") return;
-    const io = new IntersectionObserver(([entry]) => setRegisterInView(entry.isIntersecting));
-    io.observe(el);
-    return () => io.disconnect();
+    const onScreen = (el: Element) => {
+      const r = el.getBoundingClientRect();
+      return r.bottom > 0 && r.top < window.innerHeight;
+    };
+    const update = () => {
+      const register = document.getElementById("register");
+      const formBelowScreen = register ? register.getBoundingClientRect().top > window.innerHeight : true;
+      const inlineCtaVisible = Array.from(document.querySelectorAll("[data-cta]")).some(onScreen);
+      setVisible(window.scrollY > 640 && formBelowScreen && !inlineCtaVisible);
+    };
+    update();
+    window.addEventListener("scroll", update, { passive: true });
+    window.addEventListener("resize", update);
+    return () => {
+      window.removeEventListener("scroll", update);
+      window.removeEventListener("resize", update);
+    };
   }, []);
 
   return (
@@ -42,8 +49,7 @@ export default function StickyMobileCTA() {
             transition={{ type: "spring", stiffness: 400, damping: 25 }}
             className="focus-ring flex w-full items-center justify-center gap-2 rounded-full bg-gold px-5 py-3.5 text-lg font-bold tracking-tight text-night shadow-cta transition-colors hover:bg-[#ffca82]"
           >
-            <Lock className="h-[18px] w-[18px]" strokeWidth={2.5} aria-hidden="true" />
-            שריין מקום בוובינר
+            שריין מקום בוובינר ←
           </motion.button>
         </motion.div>
       )}

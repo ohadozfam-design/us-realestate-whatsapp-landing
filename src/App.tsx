@@ -30,19 +30,19 @@ export default function App() {
 
   return (
     <div className="relative min-h-screen">
-      <main className="pb-24 lg:pb-0">
+      <main>
         <HeroSection />
         <ValueSection />
         <RegistrationSection />
       </main>
 
-      <footer className="px-5 py-10 text-center">
+      <footer className="px-5 pb-28 pt-10 text-center lg:pb-10">
         <p className="text-lg font-extrabold tracking-tight text-cloud">
-          וובינר מנוע העסקאות ל2 נכסים בחודש
+          וובינר מנוע העסקאות ל-2 נכסים בחודש
         </p>
         <p className="mt-1 text-sm font-semibold text-drift">עם אוהד עוז</p>
         <p className="mx-auto mt-5 max-w-2xl text-sm leading-relaxed text-drift">
-          כל הזכויות שמורות · הוובינר הינו תוכן חינוכי ופרקטי ואינה מהווה ייעוץ
+          כל הזכויות שמורות · הוובינר הינו תוכן חינוכי ופרקטי ואינו מהווה ייעוץ
           השקעות, ייעוץ מס או ייעוץ משפטי. תוצאות עשויות להשתנות בהתאם ליישום בפועל.
         </p>
       </footer>

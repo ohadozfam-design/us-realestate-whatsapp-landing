@@ -10,13 +10,13 @@ const BARCODE =
 /** Boarding-pass style "ticket" for the thank-you page. */
 export default function EventTicket() {
   return (
-    <div className="relative mt-10 overflow-hidden rounded-3xl bg-gradient-to-l from-[#1e2c35] to-[#172129] ring-1 ring-gold/30 md:flex">
+    <div className="relative mt-10 overflow-hidden rounded-2xl bg-gradient-to-l from-[#1e2c35] to-[#172129] ring-1 ring-gold/30 md:flex">
       {/* Main section */}
       <div className="min-w-0 flex-1 p-5 sm:p-8">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <span className="inline-flex items-center gap-2 text-sm font-bold tracking-normal text-gold">
             <Ticket className="h-5 w-5" strokeWidth={2.2} aria-hidden="true" />
-            <span>כרטיס כניסה אישי</span>
+            <span>כרטיס כניסה</span>
           </span>
           <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-400/15 px-3 py-1 text-sm font-bold text-emerald-300 ring-1 ring-emerald-400/30">
             <BadgeCheck className="h-4 w-4" strokeWidth={2.4} aria-hidden="true" />
@@ -64,7 +64,7 @@ export default function EventTicket() {
             aria-hidden="true"
           />
           <div>
-            <div className="text-sm font-bold tracking-normal text-drift">מספר כרטיס</div>
+            <div className="text-sm font-bold tracking-normal text-drift">קוד אירוע</div>
             <div className="ltr-nums mt-1 font-mono text-lg font-bold tracking-widest text-gold">
               {TICKET_ID}
             </div>

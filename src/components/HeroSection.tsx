@@ -18,7 +18,7 @@ const [headlineBefore, headlineAfter] = SITE.headline.split(SITE.headlineAccent)
 export default function HeroSection() {
   return (
     <section
-      className="relative overflow-hidden px-5 pb-16 pt-14 sm:pt-20 md:pb-24"
+      className="relative overflow-hidden px-5 py-12 md:py-20"
       aria-labelledby="hero-heading"
     >
       <motion.div
@@ -30,12 +30,9 @@ export default function HeroSection() {
         {/* Badge */}
         <motion.div
           variants={item}
-          className="inline-flex items-center gap-2.5 rounded-full border border-drift/25 bg-cloud/[0.04] px-6 py-2.5 text-lg font-bold text-cloud"
+          className="inline-flex items-center gap-2.5 rounded-full border border-drift/15 bg-cloud/[0.04] px-6 py-2.5 text-lg font-bold text-cloud"
         >
-          <span className="relative flex h-2.5 w-2.5" aria-hidden="true">
-            <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-red-500 opacity-75" />
-            <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-red-500" />
-          </span>
+          <span className="inline-flex h-2.5 w-2.5 rounded-full bg-gold" aria-hidden="true" />
           וובינר לייב בזום
         </motion.div>
 
@@ -43,10 +40,11 @@ export default function HeroSection() {
         <motion.h1
           variants={item}
           id="hero-heading"
-          className="mx-auto mt-7 w-full max-w-5xl text-center font-extrabold leading-[1.15] sm:leading-[1.1] text-balance tracking-tight text-cloud text-4xl sm:text-5xl lg:text-6xl"
+          className="mx-auto mt-7 w-full max-w-5xl text-center font-extrabold leading-[1.15] text-balance tracking-tight text-cloud text-4xl sm:text-5xl lg:text-6xl"
         >
           {headlineBefore}
-          <span className="text-gold">{SITE.headlineAccent}</span>
+          {/* Non-breaking spaces keep the gold phrase on one line */}
+          <span className="text-gold">{SITE.headlineAccent.replace(/ /g, "\u00A0")}</span>
           {headlineAfter}
         </motion.h1>
 
@@ -62,36 +60,30 @@ export default function HeroSection() {
           </span>
         </motion.p>
 
-        {/* Prominent dates + hours */}
+        {/* Date + hours: one row on desktop; wraps into two tidy centred rows on mobile */}
         <motion.div
           variants={item}
-          className="mx-auto mt-9 flex flex-col items-center gap-1.5 rounded-2xl border border-gold/40 bg-gold/10 px-6 py-4 sm:flex-row sm:gap-3"
+          className="mx-auto mt-9 flex flex-wrap items-center justify-center gap-x-3 gap-y-1 rounded-2xl border border-gold/40 bg-gold/10 px-5 py-3.5 sm:px-6 sm:py-4"
         >
-          <span className="inline-flex items-center gap-2.5">
-            <CalendarDays className="h-6 w-6 shrink-0 text-gold" strokeWidth={2.2} aria-hidden="true" />
-            <span className="text-2xl font-extrabold text-gold sm:text-3xl">
+          <span className="inline-flex items-center gap-2">
+            <CalendarDays className="h-5 w-5 shrink-0 text-gold sm:h-6 sm:w-6" strokeWidth={2.2} aria-hidden="true" />
+            <span className="whitespace-nowrap text-xl font-extrabold text-gold sm:text-3xl">
               {SITE.eventDay}, {SITE.eventDate}
             </span>
           </span>
-          <span className="hidden text-gold/40 sm:block" aria-hidden="true">
-            |
+          <span className="inline-flex items-baseline gap-1.5 whitespace-nowrap">
+            <span className="text-lg font-bold text-cloud sm:text-xl">
+              <span className="ltr-nums">{SITE.startTime}</span> עד <span className="ltr-nums">{SITE.endTime}</span>
+            </span>
+            <span className="text-sm font-semibold text-drift sm:text-base">(שעון ישראל)</span>
           </span>
-          <span className="text-lg font-bold text-cloud sm:text-xl">
-            <span className="ltr-nums">{SITE.startTime}</span> עד <span className="ltr-nums">{SITE.endTime}</span>
-          </span>
-          <span className="text-base font-semibold text-drift">(שעון ישראל)</span>
         </motion.div>
 
         {/* CTA */}
-        <motion.div variants={item} className="mx-auto mt-8 w-full max-w-md">
-          <CtaButton onClick={scrollToRegister}>
-            שריין את המקום שלי בוובינר
-          </CtaButton>
-          <p className="mt-4 text-lg text-drift">
-            100% חינם · ללא כרטיס אשראי · ללא התחייבות
-          </p>
-          <p className="mt-2 text-base font-semibold text-coral">
-            המקומות מוגבלים כדי לשמור על סשן שאלות ותשובות אישי בלייב.
+        <motion.div variants={item} className="mx-auto mt-8 w-full max-w-md" data-cta>
+          <CtaButton onClick={scrollToRegister}>שריין את המקום שלי בוובינר ←</CtaButton>
+          <p className="mt-4 text-balance text-base text-drift">
+            100% חינם · ללא כרטיס אשראי · מספר המקומות מוגבל
           </p>
         </motion.div>
       </motion.div>

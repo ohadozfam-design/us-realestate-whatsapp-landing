@@ -29,7 +29,7 @@
   /* Tighter leading for large display headings (readability at scale) */
   h1,
   h2 {
-    line-height: 1.05;
+    line-height: 1.15;
   }
   h3,
   h4 {

@@ -1,4 +1,4 @@
-import { Lock, Loader2 } from "lucide-react";
+import { Loader2 } from "lucide-react";
 import { motion } from "framer-motion";
 import type { ReactNode } from "react";
 
@@ -7,7 +7,6 @@ type CtaButtonProps = {
   onClick?: () => void;
   type?: "button" | "submit";
   className?: string;
-  showLock?: boolean;
   size?: "md" | "lg";
   loading?: boolean;
   disabled?: boolean;
@@ -19,7 +18,6 @@ export default function CtaButton({
   onClick,
   type = "button",
   className = "",
-  showLock = true,
   size = "lg",
   loading = false,
   disabled = false,
@@ -42,12 +40,8 @@ export default function CtaButton({
         isDisabled ? "cursor-not-allowed opacity-70" : ""
       } ${className}`}
     >
-      {loading ? (
+      {loading && (
         <Loader2 className="h-[18px] w-[18px] shrink-0 animate-spin" strokeWidth={2.4} aria-hidden="true" />
-      ) : (
-        showLock && (
-          <Lock className="h-[17px] w-[17px] shrink-0" strokeWidth={2.4} aria-hidden="true" />
-        )
       )}
       <span>{children}</span>
     </motion.button>

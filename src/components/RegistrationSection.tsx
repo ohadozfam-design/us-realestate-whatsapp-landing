@@ -103,56 +103,31 @@ export default function RegistrationSection() {
   }
 
   return (
-    <section id="register" className="scroll-mt-6 px-5 py-16 md:py-24" aria-labelledby="register-heading">
+    <section id="register" className="px-5 py-12 md:py-20" aria-labelledby="register-heading">
       <div className="mx-auto max-w-2xl space-y-6">
-        <figure className="overflow-hidden rounded-2xl border border-gold/30 bg-cloud/[0.04] p-4 shadow-card sm:p-6">
-          <figcaption className="mb-4 text-center">
-            <p className="text-sm font-bold text-gold">בוגר K2 מספר</p>
-            <blockquote className="mt-2 text-balance text-2xl font-extrabold leading-snug text-cloud sm:text-3xl">
-              ״זה סדנא של 400 דולר פלוס״
-            </blockquote>
-          </figcaption>
-          <a
-            href="/case-studies/case-1.jpg"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="focus-ring block overflow-hidden rounded-xl"
-            aria-label="פתיחת עדות הבוגר בגודל מלא"
-          >
-            <img
-              src="/case-studies/case-1.jpg"
-              width={1044}
-              height={340}
-              loading="lazy"
-              decoding="async"
-              className="h-auto w-full"
-              alt="הודעת בוגר בוואטסאפ: זה סדנא של 400 דולר פלוס, היה מטורף"
-            />
-          </a>
-          <p className="mt-3 text-center text-sm text-drift">לחצו על התמונה לצפייה בגודל מלא</p>
-        </figure>
-
         {/* Opt-in card */}
         <div className="overflow-hidden rounded-2xl border border-drift/15 bg-ateneo/15 shadow-card">
           <div className="border-b border-drift/10 px-6 py-7 text-center sm:px-8">
-            <span className="text-sm font-bold uppercase tracking-[0.22em] text-gold">
-              הרשמה חינמית
-            </span>
+            <span className="eyebrow">הרשמה חינמית</span>
             <h2
               id="register-heading"
-              className="mt-3 text-3xl font-extrabold tracking-tight text-cloud sm:text-4xl"
+              className="mt-3 text-balance text-3xl font-extrabold leading-[1.15] tracking-tight text-cloud sm:text-4xl"
             >
               שריין את המקום שלך בוובינר
             </h2>
             <div className="mt-6 flex flex-col items-center gap-3.5">
-              <div className="inline-flex flex-wrap items-center justify-center gap-x-2.5 gap-y-1 rounded-full border border-gold/30 bg-gold/10 px-5 py-2 text-lg font-bold text-gold">
-                <CalendarDays className="h-5 w-5" strokeWidth={2.2} aria-hidden="true" />
-                <span>{SITE.eventDay}, {SITE.eventDate}</span>
-                <span className="text-gold/50" aria-hidden="true">|</span>
-                <span>
-                  <span className="ltr-nums">{SITE.startTime}</span> עד <span className="ltr-nums">{SITE.endTime}</span>
+              <div className="inline-flex flex-wrap items-center justify-center gap-x-2.5 gap-y-1 rounded-2xl border border-gold/30 bg-gold/10 px-5 py-2 text-lg font-bold text-gold sm:rounded-full">
+                <span className="inline-flex items-center gap-2 whitespace-nowrap">
+                  <CalendarDays className="h-5 w-5" strokeWidth={2.2} aria-hidden="true" />
+                  {SITE.eventDay}, {SITE.eventDate}
                 </span>
-                <span className="text-base font-semibold text-gold/80">(שעון ישראל)</span>
+                <span className="hidden text-gold/50 sm:inline" aria-hidden="true">|</span>
+                <span className="inline-flex items-baseline gap-1.5 whitespace-nowrap">
+                  <span>
+                    <span className="ltr-nums">{SITE.startTime}</span> עד <span className="ltr-nums">{SITE.endTime}</span>
+                  </span>
+                  <span className="text-sm font-semibold text-gold/80 sm:text-base">(שעון ישראל)</span>
+                </span>
               </div>
               <p className="inline-flex items-center gap-2 rounded-full bg-coral/15 px-4 py-1.5 text-base font-extrabold text-coral sm:text-lg">
                 <span className="relative flex h-2.5 w-2.5" aria-hidden="true">
@@ -165,9 +140,9 @@ export default function RegistrationSection() {
           </div>
 
           <form noValidate onSubmit={handleSubmit} className="p-6 sm:p-8">
-            <div className="rounded-xl border border-drift/15 bg-night/40 p-5 sm:p-6">
-              <h3 className="text-base font-bold uppercase tracking-[0.15em] text-gold">הפרטים שלך</h3>
-              <p className="mt-1 text-base text-drift">כדי לשלוח לך את הקישור לזום ותזכורת לפני שמתחילים.</p>
+            <div>
+              <h3 className="eyebrow">הפרטים שלך</h3>
+              <p className="mt-1 text-balance text-base text-drift">כדי לשלוח לך את הקישור לזום ותזכורת לפני שמתחילים.</p>
               <div className="mt-4 space-y-3.5">
                 <Field
                   id="lead-name"
@@ -239,7 +214,7 @@ export default function RegistrationSection() {
             </div>
 
             <div className="mt-6">
-              <CtaButton type="submit" showLock={false} loading={isSubmitting}>
+              <CtaButton type="submit" loading={isSubmitting}>
                 {isSubmitting ? "שולחים…" : "שריין לי מקום בחינם ←"}
               </CtaButton>
 
@@ -257,14 +232,42 @@ export default function RegistrationSection() {
                 href={WHATSAPP_HREF}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="focus-ring mt-5 flex items-center justify-center gap-2.5 rounded-xl border border-drift/15 bg-cloud/[0.02] px-4 py-3.5 text-center text-base font-semibold text-drift transition-colors hover:border-[#25D366]/60 hover:text-cloud"
+                className="focus-ring mt-4 flex min-h-[44px] items-center justify-center gap-2 rounded-lg px-2 py-2 text-center text-sm font-semibold text-drift underline-offset-4 transition-colors hover:text-cloud hover:underline"
               >
-                <WhatsAppIcon className="h-5 w-5 shrink-0 text-[#25D366]" />
+                <WhatsAppIcon className="h-4 w-4 shrink-0 text-[#25D366]" />
                 יש לך שאלה לפני ההרשמה? שלח לי הודעה ישירה בוואטסאפ
               </a>
             </div>
           </form>
         </div>
+
+        {/* Testimonial - reassurance after the form, framed and toned down */}
+        <figure className="rounded-2xl border border-drift/15 bg-cloud/[0.03] p-5 sm:p-6">
+          <figcaption className="mb-4 text-center">
+            <p className="eyebrow">בוגר K2 מספר</p>
+            <blockquote className="mt-2 text-balance text-xl font-extrabold leading-snug text-cloud sm:text-2xl">
+              ״זה סדנא של 400 דולר פלוס״
+            </blockquote>
+          </figcaption>
+          <a
+            href="/case-studies/case-1.jpg"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="focus-ring mx-auto block max-w-md overflow-hidden rounded-xl opacity-90 ring-1 ring-drift/20 transition-opacity duration-200 hover:opacity-100"
+            aria-label="פתיחת עדות הבוגר בגודל מלא"
+          >
+            <img
+              src="/case-studies/case-1.jpg"
+              width={1044}
+              height={340}
+              loading="lazy"
+              decoding="async"
+              className="h-auto w-full"
+              alt="הודעת בוגר בוואטסאפ: זה סדנא של 400 דולר פלוס, היה מטורף"
+            />
+          </a>
+          <p className="mt-3 text-center text-sm text-drift">לחצו על התמונה לצפייה בגודל מלא</p>
+        </figure>
       </div>
     </section>
   );
@@ -313,6 +316,8 @@ function Field({
         aria-invalid={invalid}
         aria-describedby={invalid ? `${id}-error` : undefined}
         className={`focus-ring w-full rounded-xl border bg-night/60 px-4 py-3 text-lg text-cloud placeholder:text-drift/60 transition-colors ${
+          dir === "ltr" ? "text-right" : ""
+        } ${
           invalid ? "border-coral" : "border-drift/50 hover:border-drift/70"
         }`}
       />

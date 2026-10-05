@@ -11,7 +11,6 @@ export const SITE = {
   eventDay: "יום שלישי",
   eventYear: "2026",
   eventHours: "18:00 עד 19:00 (שעון ישראל)",
-  eventFormat: "שידור לייב אחד בזום · שעה אחת",
   eventFormatShort: "שעה אחת בלייב בזום",
   // iso + start/end (Israel local time) feed the "add to Google Calendar" link.
   iso: "2026-10-13",
@@ -20,9 +19,16 @@ export const SITE = {
   timeZone: "Asia/Jerusalem",
 } as const;
 
+/**
+ * Scroll every CTA straight to the form: the first input lands about a quarter
+ * of the way down the screen, so its label and the form intro stay visible
+ * above it. Falls back to the section top if the input isn't rendered.
+ */
 export const scrollToRegister = () => {
-  const el = document.getElementById("register");
-  if (!el) return;
+  const target = document.getElementById("lead-name") || document.getElementById("register");
+  if (!target) return;
+  const breathingRoom = Math.min(180, Math.round(window.innerHeight * 0.25));
+  const top = target.getBoundingClientRect().top + window.scrollY - breathingRoom;
   const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-  el.scrollIntoView({ behavior: reduce ? "auto" : "smooth", block: "start" });
+  window.scrollTo({ top: Math.max(0, top), behavior: reduce ? "auto" : "smooth" });
 };
