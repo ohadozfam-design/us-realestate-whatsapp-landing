@@ -1,33 +1,12 @@
 import { defineConfig, loadEnv } from "vite";
 import type { Plugin } from "vite";
 import react from "@vitejs/plugin-react";
-import Stripe from "stripe";
-import { buildLineItems } from "./server/lineItems";
 
 /**
  * Dev-only middleware mirroring the production /api functions so `npm run dev`
- * works locally: /api/create-checkout-session (with the seat cap), /api/seats,
- * and /api/waitlist. The secret key is read on the server, never exposed.
+ * works locally: /api/track-event (analytics rows to the Google Sheet).
  */
 function apiDevMiddleware(env: Record<string, string>): Plugin {
-  const secretKey = env.STRIPE_SECRET_KEY;
-  const MAX_SEATS = Number(env.MAX_SEATS || 25);
-  const WORKSHOP_ID = env.WORKSHOP_ID || "Workshop_Oct6";
-
-  async function countPaidSeats(stripe: Stripe): Promise<number> {
-    let count = 0;
-    const params: Stripe.Checkout.SessionListParams = { limit: 100 };
-    for (let page = 0; page < 5; page++) {
-      const r = await stripe.checkout.sessions.list(params);
-      for (const s of r.data) {
-        if (s.payment_status === "paid" && s.metadata?.workshop === WORKSHOP_ID) count++;
-      }
-      if (!r.has_more || r.data.length === 0) break;
-      params.starting_after = r.data[r.data.length - 1].id;
-    }
-    return count;
-  }
-
   return {
     name: "api-dev-middleware",
     configureServer(server) {
@@ -44,19 +23,6 @@ function apiDevMiddleware(env: Record<string, string>): Plugin {
           for await (const chunk of req) raw += chunk;
           return raw ? JSON.parse(raw) : {};
         };
-
-        // ── GET /api/seats ─────────────────────────────────────────────────
-        if (path === "/api/seats") {
-          const open = { soldOut: false, remaining: MAX_SEATS, total: MAX_SEATS };
-          if (!secretKey) return send(200, open);
-          try {
-            const paid = await countPaidSeats(new Stripe(secretKey));
-            const remaining = Math.max(0, MAX_SEATS - paid);
-            return send(200, { soldOut: remaining <= 0, remaining, total: MAX_SEATS });
-          } catch {
-            return send(200, open);
-          }
-        }
 
         // ── POST /api/track-event ──────────────────────────────────────────
         if (path === "/api/track-event") {
@@ -119,89 +85,6 @@ function apiDevMiddleware(env: Record<string, string>): Plugin {
           }
         }
 
-        // ── POST /api/waitlist ─────────────────────────────────────────────
-        if (path === "/api/waitlist") {
-          if (req.method !== "POST") return send(405, { error: "Method Not Allowed" });
-          try {
-            const raw = await readJson();
-            const name = String(raw.name ?? "").trim();
-            const phone = String(raw.phone ?? "").trim();
-            const email = String(raw.email ?? "").trim();
-            const source = String(raw.source ?? "").trim().slice(0, 64);
-            if (name.length < 2 || phone.replace(/\D/g, "").length < 9) {
-              return send(400, { error: "נא למלא שם מלא וטלפון תקין." });
-            }
-            if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-              return send(400, { error: "כתובת האימייל אינה תקינה." });
-            }
-            const payload = {
-              timestamp: new Date().toISOString(),
-              name,
-              phone,
-              email,
-              source,
-              tag: "Workshop_Waitlist",
-            };
-            if (env.GOOGLE_SHEET_WEBHOOK_URL) {
-              try {
-                await fetch(env.GOOGLE_SHEET_WEBHOOK_URL, {
-                  method: "POST",
-                  headers: { "Content-Type": "application/json" },
-                  body: JSON.stringify(payload),
-                });
-              } catch (e) {
-                console.error("[dev waitlist] sheet dispatch failed:", e);
-              }
-            } else {
-              console.warn("[dev waitlist] GOOGLE_SHEET_WEBHOOK_URL not set - lead:", payload);
-            }
-            return send(200, { ok: true });
-          } catch (err) {
-            return send(500, { error: err instanceof Error ? err.message : "Waitlist failed" });
-          }
-        }
-
-        // ── POST /api/create-checkout-session (with seat cap) ──────────────
-        if (path === "/api/create-checkout-session") {
-          if (req.method !== "POST") return send(405, { error: "Method Not Allowed" });
-          if (!secretKey) {
-            return send(500, {
-              error: "Stripe is not configured (STRIPE_SECRET_KEY missing in .env).",
-            });
-          }
-          try {
-            const stripe = new Stripe(secretKey);
-            const paid = await countPaidSeats(stripe);
-            if (paid >= MAX_SEATS) return send(403, { error: "הוורקשופ בתפוסה מלאה", soldOut: true });
-
-            const { hasOrderBump, name = "", phone = "", email = "" } = await readJson();
-            const origin = (req.headers.origin as string) || "http://localhost:5173";
-            const lineItems = buildLineItems(Boolean(hasOrderBump));
-            const value =
-              lineItems.reduce(
-                (sum, i) => sum + (i.price_data?.unit_amount ?? 0) * (i.quantity ?? 1),
-                0
-              ) / 100;
-            const session = await stripe.checkout.sessions.create({
-              mode: "payment",
-              line_items: lineItems,
-              ...(email ? { customer_email: String(email).trim() } : {}),
-              metadata: {
-                name: String(name).trim(),
-                phone: String(phone).trim(),
-                email: String(email).trim(),
-                hasOrderBump: String(Boolean(hasOrderBump)),
-                workshop: WORKSHOP_ID,
-              },
-              success_url: `${origin}/thank-you?session_id={CHECKOUT_SESSION_ID}&value=${value}&currency=USD`,
-              cancel_url: `${origin}/?checkout=cancel`,
-            });
-            return send(200, { url: session.url });
-          } catch (err) {
-            return send(500, { error: err instanceof Error ? err.message : "Checkout failed" });
-          }
-        }
-
         return next();
       });
     },
@@ -228,7 +111,7 @@ function siteUrlPlugin(env: Record<string, string>): Plugin {
 }
 
 export default defineConfig(({ mode }) => {
-  // Load all env vars (empty prefix) so the server can read STRIPE_SECRET_KEY.
+  // Load all env vars (empty prefix) so the dev middleware can read server-only keys.
   // Only VITE_* vars are ever exposed to client code.
   const env = loadEnv(mode, process.cwd(), "");
 

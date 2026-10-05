@@ -14,10 +14,9 @@ import EventTicket from "./EventTicket";
 const WHATSAPP_GROUP_URL = "https://tinyurl.com/mesahkimnadlan";
 
 /**
- * Dedicated post-payment thank-you page. Stripe's success_url redirects here
- * (/thank-you). It confirms the purchase and explains exactly when and what
- * emails arrive, matching the single automatic confirmation email the
- * stripe-webhook sends (Zoom link + both session dates).
+ * Post-registration thank-you page. The registration form redirects here
+ * (/thank-you) after the lead is sent. It confirms the signup and explains
+ * what arrives next (confirmation email with the Zoom link + session dates).
  */
 export default function ThankYouPage() {
   return (
@@ -36,7 +35,7 @@ export default function ThankYouPage() {
 
           <span className="eyebrow mt-6 inline-block">ההרשמה הושלמה</span>
           <h1 className="mt-4 text-balance text-3xl font-extrabold leading-[1.15] tracking-tight text-cloud sm:text-5xl sm:leading-[1.1]">
-            התשלום התקבל וההרשמה שלך לסדנה אושרה!
+            ההרשמה שלך לוובינר אושרה!
           </h1>
           <p className="mx-auto mt-4 max-w-xl text-lg leading-relaxed text-drift sm:text-xl">
             שמחים שהצטרפת. כל פרטי ההתחברות לסדנה כבר בדרך אליך למייל, ורוב
@@ -44,7 +43,7 @@ export default function ThankYouPage() {
           </p>
         </div>
 
-        {/* WhatsApp group - the primary next action after purchase */}
+        {/* WhatsApp group - the primary next action after signup */}
         <a
           href={WHATSAPP_GROUP_URL}
           target="_blank"

@@ -1,14 +1,15 @@
-import { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { Check, ShieldCheck, Lock, AlertCircle, CalendarDays, Users } from "lucide-react";
+import { useState, type FormEvent } from "react";
+import { Check, ShieldCheck, AlertCircle, CalendarDays } from "lucide-react";
 import CtaButton from "./ui/CtaButton";
-import { PRICING, SITE } from "../lib/site";
-import { trackCtaClick } from "../lib/track";
+import { SITE } from "../lib/site";
+import { trackRegistration } from "../lib/track";
 
 // Direct WhatsApp question link (972 = Israel; local 0542689675).
 const WHATSAPP_HREF =
   "https://wa.me/972542689675?text=" +
-  encodeURIComponent('היי אוהד, יש לי שאלה לגבי הסדנה להגשת הצעות מחיר בנדל"ן בארה"ב:');
+  encodeURIComponent('היי אוהד, יש לי שאלה לגבי הוובינר להגשת הצעות מחיר בנדל"ן בארה"ב:');
+
+const CONSENT_LABEL = "אני מאשר/ת קבלת תזכורות לוובינר, עדכונים ותכנים במייל וב-WhatsApp";
 
 function WhatsAppIcon({ className }: { className?: string }) {
   return (
@@ -18,124 +19,96 @@ function WhatsAppIcon({ className }: { className?: string }) {
   );
 }
 
-type Props = {
-  bumpSelected: boolean;
-  onToggle: (v: boolean) => void;
-};
+type Lead = { name: string; email: string; phone: string };
+type FieldErrors = Partial<Record<keyof Lead | "consent", string>>;
 
-type Lead = { name: string; phone: string; email: string };
-type FieldErrors = Partial<Record<keyof Lead, string>>;
-
-function validateLead(lead: Lead): FieldErrors {
+function validate(lead: Lead, consent: boolean): FieldErrors {
   const errs: FieldErrors = {};
   if (lead.name.trim().length < 2) errs.name = "נא למלא שם מלא";
-  if (lead.phone.replace(/\D/g, "").length < 9) errs.phone = "נא למלא מספר טלפון תקין";
-  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(lead.email.trim())) errs.email = "נא למלא כתובת אימייל תקינה";
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(lead.email.trim())) {
+    errs.email = "נא למלא כתובת אימייל תקינה";
+  }
+  // Israeli or international: digits with optional +, spaces, dashes, parentheses.
+  const phone = lead.phone.trim();
+  const digits = phone.replace(/\D/g, "").length;
+  if (!/^\+?[\d\s\-().]+$/.test(phone) || digits < 9 || digits > 15) {
+    errs.phone = "נא למלא מספר טלפון תקין";
+  }
+  if (!consent) errs.consent = "יש לאשר קבלת תזכורות כדי שנוכל לשלוח לך את הקישור לוובינר";
   return errs;
 }
 
-export default function RegistrationSection({ bumpSelected, onToggle }: Props) {
-  const total = bumpSelected ? PRICING.withBump : PRICING.base;
+/** POST the lead to VITE_LEAD_WEBHOOK_URL, or log it when no webhook is configured. */
+async function submitLead(payload: Lead): Promise<void> {
+  const url = import.meta.env.VITE_LEAD_WEBHOOK_URL;
+  if (!url) {
+    console.info("[lead] VITE_LEAD_WEBHOOK_URL is not set - registration payload:", payload);
+    return;
+  }
+  const res = await fetch(url, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(payload),
+  });
+  if (!res.ok) throw new Error(`Lead webhook failed with status ${res.status}`);
+}
+
+const FIELD_ORDER: (keyof FieldErrors)[] = ["name", "email", "phone", "consent"];
+
+export default function RegistrationSection() {
+  const [lead, setLead] = useState<Lead>({ name: "", email: "", phone: "" });
+  const [consent, setConsent] = useState(false);
+  const [fieldErrors, setFieldErrors] = useState<FieldErrors>({});
+  const [showErrors, setShowErrors] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const [lead, setLead] = useState<Lead>({ name: "", phone: "", email: "" });
-  const [fieldErrors, setFieldErrors] = useState<FieldErrors>({});
-  const [showErrors, setShowErrors] = useState(false);
-
-  // Sold-out is driven ONLY by the backend cap (a 403 on checkout) - the UI never
-  // fetches or displays exact seat figures, only an evergreen scarcity badge.
-  const [soldOut, setSoldOut] = useState(false);
-
   function setField(key: keyof Lead, value: string) {
-    setLead((prev) => ({ ...prev, [key]: value }));
-    if (showErrors) {
-      setFieldErrors(validateLead({ ...lead, [key]: value }));
-    }
+    const next = { ...lead, [key]: value };
+    setLead(next);
+    if (showErrors) setFieldErrors(validate(next, consent));
   }
 
-  function paymentLinkFallback(): string | undefined {
-    const base = import.meta.env.VITE_STRIPE_PAYMENT_URL_BASE;
-    const bump = import.meta.env.VITE_STRIPE_PAYMENT_URL_BUMP;
-    return bumpSelected ? bump || base : base;
+  function toggleConsent(value: boolean) {
+    setConsent(value);
+    if (showErrors) setFieldErrors(validate(lead, value));
   }
 
-  async function handleCheckout() {
-    // Validate the lead details before allowing submission.
-    const errs = validateLead(lead);
+  async function handleSubmit(e: FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    if (isSubmitting) return;
+
+    const errs = validate(lead, consent);
     if (Object.keys(errs).length > 0) {
       setShowErrors(true);
       setFieldErrors(errs);
-      setError("נא למלא שם מלא, טלפון ואימייל כדי להמשיך.");
-      const firstInvalid = (["name", "phone", "email"] as (keyof Lead)[]).find((k) => errs[k]);
+      setError(null);
+      const firstInvalid = FIELD_ORDER.find((k) => errs[k]);
       if (firstInvalid) document.getElementById(`lead-${firstInvalid}`)?.focus();
       return;
     }
 
     setIsSubmitting(true);
     setError(null);
-
-    // Analytics: record the checkout CTA click right before opening Stripe.
-    // Fire-and-forget (sendBeacon) - never blocks the redirect.
-    trackCtaClick();
-
     try {
-      const res = await fetch("/api/create-checkout-session", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          hasOrderBump: bumpSelected,
-          name: lead.name.trim(),
-          phone: lead.phone.trim(),
-          email: lead.email.trim(),
-        }),
+      await submitLead({
+        name: lead.name.trim(),
+        email: lead.email.trim(),
+        phone: lead.phone.trim(),
       });
-
-      // Read as text first so a non-JSON response (e.g. an HTML SPA fallback that
-      // means the /api route wasn't hit) can be logged instead of silently swallowed.
-      const rawBody = await res.text();
-      let data: { url?: string; error?: string; soldOut?: boolean } = {};
-      try {
-        data = rawBody ? JSON.parse(rawBody) : {};
-      } catch {
-        throw new Error(
-          `Non-JSON response from /api/create-checkout-session (status ${res.status}). ` +
-            `First bytes: ${rawBody.slice(0, 120)}`
-        );
-      }
-
-      // Backend seat cap reached -> switch to the sold-out waitlist (no numbers).
-      if (res.status === 403 || data.soldOut) {
-        setSoldOut(true);
-        setIsSubmitting(false);
-        return;
-      }
-
-      if (!res.ok || !data.url) {
-        throw new Error(data.error || `Checkout API failed with status ${res.status}.`);
-      }
-
-      // Redirect to Stripe's hosted Checkout page.
-      window.location.href = data.url;
+      trackRegistration();
+      window.location.href = "/thank-you";
     } catch (err) {
-      console.error("[checkout] create-checkout-session failed:", err);
-
-      const fallbackUrl = paymentLinkFallback();
-      if (fallbackUrl) {
-        console.warn("[checkout] falling back to Stripe Payment Link:", fallbackUrl);
-        window.location.href = fallbackUrl;
-        return;
-      }
-
-      setError("אירעה שגיאה במעבר לתשלום. אנא נסה שוב בעוד רגע.");
+      console.error("[lead] submission failed:", err);
+      setError("אירעה שגיאה בשליחת הפרטים. אנא נסה שוב בעוד רגע.");
       setIsSubmitting(false);
     }
   }
 
   return (
-    <section id="register" className="scroll-mt-6 px-5 py-16 md:py-24" aria-labelledby="checkout-heading">
+    <section id="register" className="scroll-mt-6 px-5 py-16 md:py-24" aria-labelledby="register-heading">
       <div className="mx-auto max-w-2xl space-y-6">
-        {/* Guarantee - relocated here, right above the pricing */}
+        {/* Trust box - free, no commitment */}
         <div className="rounded-2xl border border-drift/15 bg-ateneo/25 p-7 sm:p-9">
           <div className="flex flex-col gap-5 sm:flex-row sm:items-start sm:gap-7">
             <ShieldCheck
@@ -145,12 +118,11 @@ export default function RegistrationSection({ bumpSelected, onToggle }: Props) {
             />
             <div className="text-center sm:text-right">
               <h2 className="text-2xl font-extrabold tracking-tight text-cloud sm:text-3xl">
-                אחריות 100% שביעות רצון
+                100% חינם, בלי התחייבות
               </h2>
               <p className="mt-3 max-w-2xl text-xl leading-relaxed text-cloud/85">
-                „אם תשתתף בסדנה ותרגיש שלא קיבלת לפחות פי 10 מערך ההשקעה שלך, שלח
-                הודעה עד 24 שעות מסיום הסדנה וקבל בחזרה את מלוא הסכום ששילמת
-                (<span className="ltr-nums font-bold text-gold">${PRICING.base}</span>).”
+                ההשתתפות בוובינר ללא עלות וללא כרטיס אשראי. ממלאים פרטים, מקבלים
+                את הקישור לזום ומגיעים ללמוד.
               </p>
             </div>
           </div>
@@ -183,24 +155,19 @@ export default function RegistrationSection({ bumpSelected, onToggle }: Props) {
           <p className="mt-3 text-center text-sm text-drift">לחצו על התמונה לצפייה בגודל מלא</p>
         </figure>
 
-        {/* Checkout card */}
-        <div
-          className="overflow-hidden rounded-2xl border border-drift/15 bg-ateneo/15 shadow-card"
-        >
-          {/* header */}
+        {/* Opt-in card */}
+        <div className="overflow-hidden rounded-2xl border border-drift/15 bg-ateneo/15 shadow-card">
           <div className="border-b border-drift/10 px-6 py-7 text-center sm:px-8">
             <span className="text-sm font-bold uppercase tracking-[0.22em] text-gold">
-              שריון מקום לסדנה
+              הרשמה חינמית
             </span>
             <h2
-              id="checkout-heading"
+              id="register-heading"
               className="mt-3 text-3xl font-extrabold tracking-tight text-cloud sm:text-4xl"
             >
-              סיכום ההזמנה שלך
+              שריין את המקום שלך בוובינר
             </h2>
-            {/* Dates + live seat status - stacked with clean breathing room */}
             <div className="mt-6 flex flex-col items-center gap-3.5">
-              {/* Prominent dates + hours badge */}
               <div className="inline-flex flex-wrap items-center justify-center gap-x-2.5 gap-y-1 rounded-full border border-gold/30 bg-gold/10 px-5 py-2 text-lg font-bold text-gold">
                 <CalendarDays className="h-5 w-5" strokeWidth={2.2} aria-hidden="true" />
                 <span>{SITE.eventDates}</span>
@@ -210,98 +177,20 @@ export default function RegistrationSection({ bumpSelected, onToggle }: Props) {
                 </span>
                 <span className="text-base font-semibold text-gold/80">(שעון ישראל)</span>
               </div>
-
-              {soldOut ? (
-                <p className="inline-flex items-center gap-2 rounded-full bg-coral/15 px-4 py-1.5 text-lg font-extrabold text-coral">
-                  <Users className="h-5 w-5" strokeWidth={2.2} aria-hidden="true" />
-                  הסדנה בתפוסה מלאה
-                </p>
-              ) : (
-                <p className="inline-flex items-center gap-2 rounded-full bg-coral/15 px-4 py-1.5 text-base font-extrabold text-coral sm:text-lg">
-                  <span className="relative flex h-2.5 w-2.5" aria-hidden="true">
-                    <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-coral opacity-75" />
-                    <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-coral" />
-                  </span>
-                  מספר המקומות מוגבל - נותרו מקומות אחרונים
-                </p>
-              )}
+              <p className="inline-flex items-center gap-2 rounded-full bg-coral/15 px-4 py-1.5 text-base font-extrabold text-coral sm:text-lg">
+                <span className="relative flex h-2.5 w-2.5" aria-hidden="true">
+                  <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-coral opacity-75" />
+                  <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-coral" />
+                </span>
+                מספר המקומות בזום מוגבל
+              </p>
             </div>
           </div>
 
-          <div className="p-6 sm:p-8">
-            {soldOut ? (
-              <SoldOutWaitlist />
-            ) : (
-              <>
-            <div className="space-y-3">
-              <LineItem
-                label="כרטיס לסדנה הלייב · יומיים בלייב"
-                price={`$${PRICING.base}`}
-              />
-              <AnimatePresence initial={false}>
-                {bumpSelected && (
-                  <motion.div
-                    initial={{ opacity: 0, height: 0 }}
-                    animate={{ opacity: 1, height: "auto" }}
-                    exit={{ opacity: 0, height: 0 }}
-                    transition={{ duration: 0.3 }}
-                  >
-                    <LineItem label="Off Market & Contractor Pack" price="$27" accent />
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </div>
-
-            {/* ---- Order bump (native, keyboard-accessible checkbox) ---- */}
-            <div className="my-6">
-              <input
-                id="order-bump"
-                type="checkbox"
-                checked={bumpSelected}
-                onChange={(e) => onToggle(e.target.checked)}
-                className="peer sr-only"
-              />
-              <label
-                htmlFor="order-bump"
-                className={`relative flex cursor-pointer items-start gap-3 rounded-xl border-2 border-dashed p-4 pt-5 text-right transition-colors duration-300 peer-focus-visible:outline-none peer-focus-visible:ring-2 peer-focus-visible:ring-gold peer-focus-visible:ring-offset-2 peer-focus-visible:ring-offset-night ${
-                  bumpSelected
-                    ? "border-gold bg-night/50"
-                    : "border-gold/50 bg-night/30 hover:bg-night/45"
-                }`}
-              >
-                <span
-                  className="absolute -top-px right-4 -translate-y-1/2 rounded-md bg-coral px-2 py-0.5 text-xs font-extrabold text-night"
-                  aria-hidden="true"
-                >
-                  הצעה חד פעמית שלא תחזור
-                </span>
-
-                <span
-                  className={`mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-md border-2 transition-colors duration-200 ${
-                    bumpSelected ? "border-gold bg-gold text-night" : "border-gold/70 bg-transparent"
-                  }`}
-                  aria-hidden="true"
-                >
-                  {bumpSelected && <Check className="h-4 w-4" strokeWidth={3.5} />}
-                </span>
-                <span className="text-xl leading-relaxed text-cloud">
-                  <span className="font-bold">כן! הוסף להזמנה שלי</span> את חבילת החוזים לעבודה מול
-                  קבלנים ומוכרים פרטיים{" "}
-                  <span className="font-semibold text-gold">(Off Market &amp; Contractor Pack)</span>{" "}
-                  תמורת <span className="ltr-nums font-bold">$27</span> בלבד{" "}
-                  <span className="text-drift">
-                    (במקום <span className="ltr-nums line-through">${PRICING.bumpOriginal}</span>).
-                  </span>
-                </span>
-              </label>
-            </div>
-
-            {/* ---- Lead capture form ---- */}
+          <form noValidate onSubmit={handleSubmit} className="p-6 sm:p-8">
             <div className="rounded-xl border border-drift/15 bg-night/40 p-5 sm:p-6">
               <h3 className="text-base font-bold uppercase tracking-[0.15em] text-gold">הפרטים שלך</h3>
-              <p className="mt-1 text-base text-drift">
-                כדי לשמור לך את המקום ולשלוח את הקישור לזום ואת כל החומרים.
-              </p>
+              <p className="mt-1 text-base text-drift">כדי לשלוח לך את הקישור לזום ותזכורת לפני שמתחילים.</p>
               <div className="mt-4 space-y-3.5">
                 <Field
                   id="lead-name"
@@ -311,18 +200,6 @@ export default function RegistrationSection({ bumpSelected, onToggle }: Props) {
                   autoComplete="name"
                   placeholder="ישראל ישראלי"
                   error={showErrors ? fieldErrors.name : undefined}
-                />
-                <Field
-                  id="lead-phone"
-                  label="טלפון / וואטסאפ"
-                  type="tel"
-                  inputMode="tel"
-                  dir="ltr"
-                  value={lead.phone}
-                  onChange={(v) => setField("phone", v)}
-                  autoComplete="tel"
-                  placeholder="050 000 0000"
-                  error={showErrors ? fieldErrors.phone : undefined}
                 />
                 <Field
                   id="lead-email"
@@ -336,48 +213,57 @@ export default function RegistrationSection({ bumpSelected, onToggle }: Props) {
                   placeholder="name@email.com"
                   error={showErrors ? fieldErrors.email : undefined}
                 />
+                <Field
+                  id="lead-phone"
+                  label="טלפון / וואטסאפ"
+                  type="tel"
+                  inputMode="tel"
+                  dir="ltr"
+                  value={lead.phone}
+                  onChange={(v) => setField("phone", v)}
+                  autoComplete="tel"
+                  placeholder="050 000 0000"
+                  error={showErrors ? fieldErrors.phone : undefined}
+                />
               </div>
-            </div>
 
-            {/* ---- Total ---- */}
-            <div className="mt-6 flex flex-wrap items-center justify-between gap-3 rounded-xl border border-cloud/10 bg-night/50 px-5 py-4">
-              <span className="text-lg font-bold text-cloud">סה״כ לתשלום היום</span>
-              <div
-                className="relative min-h-[3.25rem] shrink-0 overflow-visible text-left"
-                role="status"
-                aria-live="polite"
-                aria-atomic="true"
-                aria-label={`סך הכל לתשלום: ${total} דולר`}
-              >
-                <AnimatePresence mode="popLayout" initial={false}>
-                  <motion.span
-                    key={total}
-                    initial={{ y: 20, opacity: 0 }}
-                    animate={{ y: 0, opacity: 1 }}
-                    exit={{ y: -20, opacity: 0 }}
-                    transition={{ duration: 0.25 }}
-                    className="ltr-nums block text-5xl font-extrabold tracking-tight text-gold"
+              {/* Marketing consent - unchecked by default, required to register */}
+              <div className="mt-5">
+                <label htmlFor="lead-consent" className="flex cursor-pointer items-start gap-3">
+                  <input
+                    id="lead-consent"
+                    type="checkbox"
+                    checked={consent}
+                    onChange={(e) => toggleConsent(e.target.checked)}
+                    aria-invalid={showErrors && Boolean(fieldErrors.consent)}
+                    aria-describedby={showErrors && fieldErrors.consent ? "lead-consent-error" : undefined}
+                    className="peer sr-only"
+                  />
+                  <span
+                    className={`mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-md border-2 transition-colors duration-200 peer-focus-visible:ring-2 peer-focus-visible:ring-gold peer-focus-visible:ring-offset-2 peer-focus-visible:ring-offset-night ${
+                      consent
+                        ? "border-gold bg-gold text-night"
+                        : showErrors && fieldErrors.consent
+                          ? "border-coral"
+                          : "border-drift/60"
+                    }`}
+                    aria-hidden="true"
                   >
-                    ${total}
-                  </motion.span>
-                </AnimatePresence>
+                    {consent && <Check className="h-4 w-4" strokeWidth={3.5} />}
+                  </span>
+                  <span className="text-base leading-relaxed text-cloud/90">{CONSENT_LABEL}</span>
+                </label>
+                {showErrors && fieldErrors.consent && (
+                  <p id="lead-consent-error" className="mt-1.5 text-sm font-semibold text-coral">
+                    {fieldErrors.consent}
+                  </p>
+                )}
               </div>
             </div>
 
-            {/* ---- CTA ---- */}
             <div className="mt-6">
-              <CtaButton
-                onClick={handleCheckout}
-                loading={isSubmitting}
-                aria-label={`שריין את מקומי בסדנה עכשיו בעלות של ${total} דולר`}
-              >
-                {isSubmitting ? (
-                  "מעבירים אותך לתשלום מאובטח…"
-                ) : (
-                  <>
-                    שריין את מקומי בסדנה עכשיו · <span className="ltr-nums">${total}</span>
-                  </>
-                )}
+              <CtaButton type="submit" showLock={false} loading={isSubmitting}>
+                {isSubmitting ? "שולחים…" : "שריין לי מקום בחינם ←"}
               </CtaButton>
 
               {error && (
@@ -390,16 +276,6 @@ export default function RegistrationSection({ bumpSelected, onToggle }: Props) {
                 </p>
               )}
 
-              <div className="mt-4 flex flex-wrap items-center justify-center gap-x-5 gap-y-2 text-base text-drift">
-                <span className="inline-flex items-center gap-1.5">
-                  <ShieldCheck className="h-4 w-4 text-gold" aria-hidden="true" /> החזר כספי מלא 100%
-                </span>
-                <span className="inline-flex items-center gap-1.5">
-                  <Lock className="h-4 w-4 text-gold" aria-hidden="true" /> תשלום מאובטח
-                </span>
-              </div>
-
-              {/* Direct WhatsApp question link */}
               <a
                 href={WHATSAPP_HREF}
                 target="_blank"
@@ -410,141 +286,10 @@ export default function RegistrationSection({ bumpSelected, onToggle }: Props) {
                 יש לך שאלה לפני ההרשמה? שלח לי הודעה ישירה בוואטסאפ
               </a>
             </div>
-              </>
-            )}
-          </div>
+          </form>
         </div>
       </div>
     </section>
-  );
-}
-
-function SoldOutWaitlist() {
-  const [lead, setLead] = useState<Lead>({ name: "", phone: "", email: "" });
-  const [fieldErrors, setFieldErrors] = useState<FieldErrors>({});
-  const [showErrors, setShowErrors] = useState(false);
-  const [submitting, setSubmitting] = useState(false);
-  const [submitted, setSubmitted] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-
-  function setField(key: keyof Lead, value: string) {
-    setLead((prev) => ({ ...prev, [key]: value }));
-    if (showErrors) setFieldErrors(validateLead({ ...lead, [key]: value }));
-  }
-
-  async function submit() {
-    const errs = validateLead(lead);
-    if (Object.keys(errs).length > 0) {
-      setShowErrors(true);
-      setFieldErrors(errs);
-      setError("נא למלא שם מלא, טלפון ואימייל תקינים.");
-      return;
-    }
-    setSubmitting(true);
-    setError(null);
-    try {
-      const r = await fetch("/api/waitlist", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          name: lead.name.trim(),
-          phone: lead.phone.trim(),
-          email: lead.email.trim(),
-          source: "sold_out",
-        }),
-      });
-      if (!r.ok) throw new Error(`waitlist failed (${r.status})`);
-      setSubmitted(true);
-    } catch (err) {
-      console.error("[waitlist] submit failed:", err);
-      setError("אירעה שגיאה. נסה שוב בעוד רגע.");
-      setSubmitting(false);
-    }
-  }
-
-  return (
-    <div className="text-center">
-      <div className="inline-flex items-center gap-2 rounded-full border border-coral/40 bg-coral/10 px-4 py-1.5 text-base font-extrabold text-coral">
-        <Users className="h-5 w-5" strokeWidth={2.2} aria-hidden="true" />
-        תפוסה מלאה
-      </div>
-      <h3 className="mt-4 text-2xl font-extrabold tracking-tight text-cloud sm:text-3xl">
-        כל המקומות למחזור הזה נתפסו
-      </h3>
-      <p className="mx-auto mt-3 max-w-lg text-lg leading-relaxed text-drift">
-        הצטרף לרשימת ההמתנה ונעדכן אותך מיד אם יתפנה מקום, או ראשונים לקראת
-        המחזור הבא.
-      </p>
-
-      {submitted ? (
-        <div className="mt-6 rounded-xl border border-gold/30 bg-gold/10 p-7 text-center">
-          <p className="text-2xl font-extrabold text-cloud">נרשמת לרשימת ההמתנה!</p>
-          <p className="mt-2 text-lg text-drift">נהיה בקשר ברגע שמתפנה מקום.</p>
-        </div>
-      ) : (
-        <div className="mt-6 text-right">
-          <div className="rounded-xl border border-drift/15 bg-night/40 p-5 sm:p-6">
-            <h4 className="text-center text-base font-bold uppercase tracking-[0.15em] text-gold">
-              רשימת המתנה
-            </h4>
-            <div className="mt-4 space-y-3.5">
-              <Field
-                id="wl-name"
-                label="שם מלא"
-                value={lead.name}
-                onChange={(v) => setField("name", v)}
-                autoComplete="name"
-                placeholder="ישראל ישראלי"
-                error={showErrors ? fieldErrors.name : undefined}
-              />
-              <Field
-                id="wl-phone"
-                label="טלפון / וואטסאפ"
-                type="tel"
-                inputMode="tel"
-                dir="ltr"
-                value={lead.phone}
-                onChange={(v) => setField("phone", v)}
-                autoComplete="tel"
-                placeholder="050 000 0000"
-                error={showErrors ? fieldErrors.phone : undefined}
-              />
-              <Field
-                id="wl-email"
-                label="כתובת אימייל"
-                type="email"
-                inputMode="email"
-                dir="ltr"
-                value={lead.email}
-                onChange={(v) => setField("email", v)}
-                autoComplete="email"
-                placeholder="name@email.com"
-                error={showErrors ? fieldErrors.email : undefined}
-              />
-            </div>
-          </div>
-
-          <button
-            type="button"
-            onClick={submit}
-            disabled={submitting}
-            className="focus-ring mt-5 w-full rounded-full bg-gold px-6 py-4 text-lg font-bold text-night shadow-cta transition-colors hover:bg-[#ffca82] disabled:cursor-not-allowed disabled:opacity-70"
-          >
-            {submitting ? "רושמים אותך…" : "הוסף אותי לרשימת ההמתנה"}
-          </button>
-
-          {error && (
-            <p
-              role="alert"
-              className="mt-3 flex items-center justify-center gap-2 rounded-lg border border-coral/40 bg-coral/10 px-4 py-2.5 text-base font-semibold text-coral"
-            >
-              <AlertCircle className="h-4 w-4 shrink-0" strokeWidth={2.2} aria-hidden="true" />
-              {error}
-            </p>
-          )}
-        </div>
-      )}
-    </div>
   );
 }
 
@@ -579,11 +324,13 @@ function Field({
       </label>
       <input
         id={id}
+        name={id.replace("lead-", "")}
         type={type}
         inputMode={inputMode}
         dir={dir}
         autoComplete={autoComplete}
         placeholder={placeholder}
+        required
         value={value}
         onChange={(e) => onChange(e.target.value)}
         aria-invalid={invalid}
@@ -597,27 +344,6 @@ function Field({
           {error}
         </p>
       )}
-    </div>
-  );
-}
-
-function LineItem({
-  label,
-  price,
-  accent = false,
-}: {
-  label: string;
-  price: string;
-  accent?: boolean;
-}) {
-  return (
-    <div
-      className={`flex items-center justify-between rounded-xl border px-4 py-3 ${
-        accent ? "border-gold/40 bg-gold/10" : "border-cloud/10 bg-night/40"
-      }`}
-    >
-      <span className="pe-3 text-base font-semibold text-cloud">{label}</span>
-      <span className="ltr-nums shrink-0 text-base font-bold text-cloud">{price}</span>
     </div>
   );
 }

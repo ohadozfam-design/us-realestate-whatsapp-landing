@@ -5,6 +5,7 @@ import type { ReactNode } from "react";
 type CtaButtonProps = {
   children: ReactNode;
   onClick?: () => void;
+  type?: "button" | "submit";
   className?: string;
   showLock?: boolean;
   size?: "md" | "lg";
@@ -16,6 +17,7 @@ type CtaButtonProps = {
 export default function CtaButton({
   children,
   onClick,
+  type = "button",
   className = "",
   showLock = true,
   size = "lg",
@@ -28,7 +30,7 @@ export default function CtaButton({
 
   return (
     <motion.button
-      type="button"
+      type={type}
       onClick={onClick}
       aria-label={ariaLabel}
       aria-busy={loading}

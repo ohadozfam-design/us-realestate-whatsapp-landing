@@ -1,4 +1,4 @@
-// Central place for editable copy placeholders + pricing.
+// Central place for editable event copy.
 // Swap the placeholders below with the real event details before launch.
 
 export const SITE = {
@@ -11,15 +11,6 @@ export const SITE = {
   eventFormatShort: "יומיים בלייב בזום · שעתיים בכל יום",
   day1: { date: "6 באוקטובר", label: "יום שלישי" },
   day2: { date: "7 באוקטובר", label: "יום רביעי" },
-} as const;
-
-export const PRICING = {
-  base: 97,
-  orderBump: 27,
-  get withBump() {
-    return this.base + this.orderBump;
-  },
-  bumpOriginal: 197,
 } as const;
 
 export const scrollToRegister = () => {

@@ -9,7 +9,7 @@
 // periodic heartbeat (5s, 15s, 30s, 60s, then every 30s), and page exit. We do
 // NOT rely on pagehide/visibilitychange alone (mobile browsers throttle/drop
 // them) - the heartbeat guarantees time-on-page keeps advancing. All sends use
-// sendBeacon (keepalive fetch fallback) so nothing blocks the UI or checkout.
+// sendBeacon (keepalive fetch fallback) so nothing blocks the UI or registration.
 // No cookies; only device class, UTM tags and ?phone / ?uid lead params.
 
 type Extra = Record<string, string | number | boolean>;
@@ -206,50 +206,38 @@ function fbqTrack(event: string): void {
 
 /* ── public API ─────────────────────────────────────────────────────────── */
 
+const LEAD_PENDING_KEY = "k2_lead_pending";
+
 /**
- * Thank-you page: load the pixel (PageView) and fire Purchase once per Stripe
- * Checkout Session. eventID = the session id, which the stripe-webhook also
- * sends as event_id to the Conversions API, so Meta deduplicates the two.
- * Without a cs_ session id (direct visit, legacy link) no Purchase is fired.
+ * Thank-you page: load the pixel (PageView) and fire Lead once, only when the
+ * visitor arrived here by submitting the registration form (direct visits or
+ * refreshes fire nothing).
  */
-export function trackPurchase(): void {
+export function trackLead(): void {
   if (typeof window === "undefined") return;
   initMetaPixel();
-
-  const params = new URLSearchParams(window.location.search);
-  const sessionId = params.get("session_id") || "";
-  if (!sessionId.startsWith("cs_")) return;
-
-  const firedKey = `k2_purchase_${sessionId}`;
   try {
-    if (window.localStorage.getItem(firedKey)) return; // refresh / back-nav
+    if (window.sessionStorage.getItem(LEAD_PENDING_KEY) !== "1") return;
+    window.sessionStorage.removeItem(LEAD_PENDING_KEY);
   } catch {
-    /* storage blocked - Meta still dedupes on eventID */
+    return;
   }
-
-  const value = Number(params.get("value")) || 0;
-  const currency = (params.get("currency") || "USD").toUpperCase();
-  try {
-    window.fbq?.("track", "Purchase", { value, currency }, { eventID: sessionId });
-  } catch {
-    /* pixel not present */
-  }
-
-  try {
-    window.localStorage.setItem(firedKey, "1");
-  } catch {
-    /* ignore */
-  }
-  // Drop the session id from the address bar so it isn't shared/bookmarked.
-  window.history.replaceState(null, "", window.location.pathname);
+  fbqTrack("Lead");
 }
 
-/** Checkout CTA click - mark the session and update the row before Stripe. */
-export function trackCtaClick(): void {
+/**
+ * Registration submitted - mark the session row and flag the Lead pixel event
+ * for the thank-you page (fired there so the redirect can't drop it).
+ */
+export function trackRegistration(): void {
   state().cta = true;
   mirror(CTA_KEY, "1");
   sendSession();
-  fbqTrack("InitiateCheckout");
+  try {
+    window.sessionStorage.setItem(LEAD_PENDING_KEY, "1");
+  } catch {
+    /* storage blocked - Lead simply won't fire */
+  }
 }
 
 function scrollMilestone(pct: number): number {

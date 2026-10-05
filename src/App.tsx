@@ -4,27 +4,23 @@ import ValueSection from "./components/ValueSection";
 import RegistrationSection from "./components/RegistrationSection";
 import StickyMobileCTA from "./components/StickyMobileCTA";
 import ThankYouPage from "./components/ThankYouPage";
-import { initTracking, trackPurchase } from "./lib/track";
+import { initTracking, trackLead } from "./lib/track";
 
-// Stripe's success_url redirects to /thank-you. We also accept the legacy
-// ?checkout=success query param so older/cached checkout links keep working.
+// The registration form redirects to /thank-you on success.
 function isThankYouRoute() {
   if (typeof window === "undefined") return false;
-  const path = window.location.pathname.replace(/\/+$/, "");
-  if (path === "/thank-you") return true;
-  return new URLSearchParams(window.location.search).get("checkout") === "success";
+  return window.location.pathname.replace(/\/+$/, "") === "/thank-you";
 }
 
 export default function App() {
-  const [bumpSelected, setBumpSelected] = useState(false);
   const [thankYou] = useState(isThankYouRoute);
 
   // Analytics: page_view (once/session) + scroll-depth and time-on-page listeners.
-  // The thank-you page skips session analytics (so post-purchase visits don't
-  // skew landing metrics) and only fires the Meta Pixel Purchase event.
+  // The thank-you page skips session analytics (so post-signup visits don't
+  // skew landing metrics) and only fires the Meta Pixel Lead event.
   useEffect(() => {
     if (thankYou) {
-      trackPurchase();
+      trackLead();
       return;
     }
     return initTracking();
@@ -37,7 +33,7 @@ export default function App() {
       <main className="pb-24 lg:pb-0">
         <HeroSection />
         <ValueSection />
-        <RegistrationSection bumpSelected={bumpSelected} onToggle={setBumpSelected} />
+        <RegistrationSection />
       </main>
 
       <footer className="px-5 py-10 text-center">

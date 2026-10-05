@@ -1,23 +1,14 @@
-import { useState } from "react";
 import { BadgeCheck, CalendarDays, Ticket, Video } from "lucide-react";
 import { SITE } from "../lib/site";
 
 /** Uneven bar widths read as a barcode; purely decorative. */
+const TICKET_ID = "K2-1006";
+
 const BARCODE =
   "repeating-linear-gradient(90deg, currentColor 0 2px, transparent 2px 4px, currentColor 4px 7px, transparent 7px 9px, currentColor 9px 10px, transparent 10px 13px, currentColor 13px 15px, transparent 15px 16px)";
 
-/**
- * Boarding-pass style "ticket" for the thank-you page. The ticket number is
- * derived from the Stripe Checkout Session id while it is still in the URL
- * (read once on first render, before trackPurchase() strips it); a direct or
- * refreshed visit falls back to the cohort code.
- */
+/** Boarding-pass style "ticket" for the thank-you page. */
 export default function EventTicket() {
-  const [ticketId] = useState(() => {
-    const sid = new URLSearchParams(window.location.search).get("session_id") || "";
-    return sid.startsWith("cs_") ? `K2-${sid.slice(-6).toUpperCase()}` : "K2-1006";
-  });
-
   return (
     <div className="relative mt-10 overflow-hidden rounded-3xl bg-gradient-to-l from-[#1e2c35] to-[#172129] ring-1 ring-gold/30 md:flex">
       {/* Main section */}
@@ -75,7 +66,7 @@ export default function EventTicket() {
           <div>
             <div className="text-sm font-bold tracking-normal text-drift">מספר כרטיס</div>
             <div className="ltr-nums mt-1 font-mono text-lg font-bold tracking-widest text-gold">
-              {ticketId}
+              {TICKET_ID}
             </div>
           </div>
         </div>

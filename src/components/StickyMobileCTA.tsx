@@ -4,13 +4,24 @@ import { Lock } from "lucide-react";
 import { scrollToRegister } from "../lib/site";
 
 export default function StickyMobileCTA() {
-  const [visible, setVisible] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+  const [registerInView, setRegisterInView] = useState(false);
+  const visible = scrolled && !registerInView;
 
   useEffect(() => {
-    const onScroll = () => setVisible(window.scrollY > 640);
+    const onScroll = () => setScrolled(window.scrollY > 640);
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  // Hide while the registration form is on screen so the bar never covers it.
+  useEffect(() => {
+    const el = document.getElementById("register");
+    if (!el || typeof IntersectionObserver === "undefined") return;
+    const io = new IntersectionObserver(([entry]) => setRegisterInView(entry.isIntersecting));
+    io.observe(el);
+    return () => io.disconnect();
   }, []);
 
   return (

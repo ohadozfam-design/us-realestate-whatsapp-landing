@@ -85,7 +85,7 @@ export default function HeroSection() {
             שריין את המקום שלי בסדנה
           </CtaButton>
           <p className="mt-4 text-lg text-drift">
-            🔒 100% אחריות להחזר כספי מלא בסיום הסדנה ללא שאלות.
+            100% חינם · ללא כרטיס אשראי · ללא התחייבות
           </p>
           <p className="mt-2 text-base font-semibold text-coral">
             המקומות מוגבלים כדי לשמור על סשן שאלות ותשובות אישי בלייב.
