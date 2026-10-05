@@ -105,6 +105,35 @@ export default function RegistrationSection() {
   return (
     <section id="register" className="px-5 py-12 md:py-20" aria-labelledby="register-heading">
       <div className="mx-auto max-w-2xl space-y-6">
+        {/* Testimonial - social proof above the form, framed and toned down.
+            CTAs scroll past it straight to the first input (scrollToRegister). */}
+        <figure className="rounded-2xl border border-drift/15 bg-cloud/[0.03] p-5 sm:p-6">
+          <figcaption className="mb-4 text-center">
+            <p className="eyebrow">בוגר K2 מספר</p>
+            <blockquote className="mt-2 text-balance text-xl font-extrabold leading-snug text-cloud sm:text-2xl">
+              ״זה סדנא של 400 דולר פלוס״
+            </blockquote>
+          </figcaption>
+          <a
+            href="/case-studies/case-1.jpg"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="focus-ring mx-auto block max-w-md overflow-hidden rounded-xl opacity-90 ring-1 ring-drift/20 transition-opacity duration-200 hover:opacity-100"
+            aria-label="פתיחת עדות הבוגר בגודל מלא"
+          >
+            <img
+              src="/case-studies/case-1.jpg"
+              width={1044}
+              height={340}
+              loading="lazy"
+              decoding="async"
+              className="h-auto w-full"
+              alt="הודעת בוגר בוואטסאפ: זה סדנא של 400 דולר פלוס, היה מטורף"
+            />
+          </a>
+          <p className="mt-3 text-center text-sm text-drift">לחצו על התמונה לצפייה בגודל מלא</p>
+        </figure>
+
         {/* Opt-in card */}
         <div className="overflow-hidden rounded-2xl border border-drift/15 bg-ateneo/15 shadow-card">
           <div className="border-b border-drift/10 px-6 py-7 text-center sm:px-8">
@@ -240,34 +269,6 @@ export default function RegistrationSection() {
             </div>
           </form>
         </div>
-
-        {/* Testimonial - reassurance after the form, framed and toned down */}
-        <figure className="rounded-2xl border border-drift/15 bg-cloud/[0.03] p-5 sm:p-6">
-          <figcaption className="mb-4 text-center">
-            <p className="eyebrow">בוגר K2 מספר</p>
-            <blockquote className="mt-2 text-balance text-xl font-extrabold leading-snug text-cloud sm:text-2xl">
-              ״זה סדנא של 400 דולר פלוס״
-            </blockquote>
-          </figcaption>
-          <a
-            href="/case-studies/case-1.jpg"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="focus-ring mx-auto block max-w-md overflow-hidden rounded-xl opacity-90 ring-1 ring-drift/20 transition-opacity duration-200 hover:opacity-100"
-            aria-label="פתיחת עדות הבוגר בגודל מלא"
-          >
-            <img
-              src="/case-studies/case-1.jpg"
-              width={1044}
-              height={340}
-              loading="lazy"
-              decoding="async"
-              className="h-auto w-full"
-              alt="הודעת בוגר בוואטסאפ: זה סדנא של 400 דולר פלוס, היה מטורף"
-            />
-          </a>
-          <p className="mt-3 text-center text-sm text-drift">לחצו על התמונה לצפייה בגודל מלא</p>
-        </figure>
       </div>
     </section>
   );
