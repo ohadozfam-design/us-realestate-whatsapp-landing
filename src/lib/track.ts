@@ -17,6 +17,8 @@ type Extra = Record<string, string | number | boolean>;
 declare global {
   interface Window {
     fbq?: (...args: unknown[]) => void;
+    gtag?: (...args: unknown[]) => void;
+    dataLayer?: unknown[];
   }
 }
 
@@ -206,16 +208,71 @@ function fbqTrack(event: string): void {
 
 /* ── public API ─────────────────────────────────────────────────────────── */
 
+/* ── Google Tag: gtag.js for G-/AW- ids, the GTM container for GTM- ids ──── */
+
+function googleTagId(): string {
+  const id = import.meta.env.VITE_GOOGLE_TAG_ID;
+  return typeof id === "string" ? id.trim() : "";
+}
+
+let googleTagLoaded = false;
+
+/** Load Google Tag once when VITE_GOOGLE_TAG_ID is set; `config` sends page_view. */
+function initGoogleTag(): void {
+  const id = googleTagId();
+  if (!id || googleTagLoaded) return;
+  googleTagLoaded = true;
+
+  const dataLayer = (window.dataLayer = window.dataLayer || []);
+  const script = document.createElement("script");
+  script.async = true;
+
+  if (id.startsWith("GTM-")) {
+    dataLayer.push({ "gtm.start": Date.now(), event: "gtm.js" });
+    script.src = `https://www.googletagmanager.com/gtm.js?id=${encodeURIComponent(id)}`;
+  } else {
+    // gtag.js expects the raw `arguments` object in the dataLayer, not an array.
+    window.gtag = function () {
+      // eslint-disable-next-line prefer-rest-params
+      dataLayer.push(arguments);
+    };
+    window.gtag("js", new Date());
+    window.gtag("config", id);
+    script.src = `https://www.googletagmanager.com/gtag/js?id=${encodeURIComponent(id)}`;
+  }
+  document.head.appendChild(script);
+}
+
+/** generate_lead for GA4/GTM, plus a Google Ads conversion when a label is set. */
+function googleTrackLead(): void {
+  const id = googleTagId();
+  if (!id) return;
+  try {
+    if (id.startsWith("GTM-")) {
+      window.dataLayer?.push({ event: "generate_lead" });
+      return;
+    }
+    window.gtag?.("event", "generate_lead");
+    const label = import.meta.env.VITE_GOOGLE_ADS_CONVERSION_LABEL;
+    if (id.startsWith("AW-") && label) {
+      window.gtag?.("event", "conversion", { send_to: `${id}/${label}` });
+    }
+  } catch {
+    /* tag not present */
+  }
+}
+
 const LEAD_PENDING_KEY = "k2_lead_pending";
 
 /**
- * Thank-you page: load the pixel (PageView) and fire Lead once, only when the
- * visitor arrived here by submitting the registration form (direct visits or
- * refreshes fire nothing).
+ * Thank-you page: load the pixel + Google Tag (page views) and fire the Lead /
+ * generate_lead conversions once, only when the visitor arrived here by
+ * submitting the registration form (direct visits or refreshes fire nothing).
  */
 export function trackLead(): void {
   if (typeof window === "undefined") return;
   initMetaPixel();
+  initGoogleTag();
   try {
     if (window.sessionStorage.getItem(LEAD_PENDING_KEY) !== "1") return;
     window.sessionStorage.removeItem(LEAD_PENDING_KEY);
@@ -223,6 +280,7 @@ export function trackLead(): void {
     return;
   }
   fbqTrack("Lead");
+  googleTrackLead();
 }
 
 /**
@@ -267,6 +325,7 @@ export function initTracking(): () => void {
   }
 
   initMetaPixel(); // fires fbq PageView when VITE_META_PIXEL_ID is configured
+  initGoogleTag(); // sends page_view when VITE_GOOGLE_TAG_ID is configured
 
   // Excluded browsers send nothing (no session, scroll, time-on-page or CTA).
   if (analyticsIgnored()) return () => {};
