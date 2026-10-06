@@ -1,6 +1,6 @@
-# וובינר נדל״ן בארה״ב — דף נחיתה
+# קהילת משקיעי הנדל״ן בארה״ב — דף נחיתה
 
-דף נחיתה להרשמה חינמית לוובינר לייב בזום. בנוי RTL מלא, Mobile-First, עם CTA דביק במובייל.
+מיקרו-דף נחיתה להצטרפות לקהילת WhatsApp סגורה. בלי טפסים: כל כפתור מוביל ישירות לקבוצה. בנוי RTL מלא, Mobile-First, עם CTA דביק במובייל.
 
 ## סטאק
 - **Vite + React 18 + TypeScript**
@@ -20,16 +20,19 @@ npm run preview  # תצוגה מקדימה של הבנייה
 ## מבנה הרכיבים (`src/components/`)
 | רכיב | תיאור |
 |------|-------|
-| `HeroSection.tsx` | כותרת, תת-כותרת, מועד ו-CTA ראשי |
-| `ValueSection.tsx` | מה מקבלים בוובינר ולמי זה מתאים |
-| `RegistrationSection.tsx` | טופס הרשמה חינמי (שם, אימייל, טלפון + אישור דיוור) |
-| `StickyMobileCTA.tsx` | CTA דביק בתחתית המובייל |
-| `ThankYouPage.tsx` | עמוד תודה: קבוצת WhatsApp, הוספה ליומן Google, פרטי השידור |
+| `HeroSection.tsx` | תגית, כותרת, תת-כותרת ו-CTA ראשי ל-WhatsApp |
+| `ShowcaseSection.tsx` | צילומי מסך מהקהילה (הוכחה חברתית) |
+| `StickyMobileCTA.tsx` | כפתור WhatsApp דביק בתחתית המובייל |
+| `ui/WhatsAppButton.tsx` | כפתור ההצטרפות: קישור לקבוצה + אירועי מעקב |
 
-## מה צריך לעדכן לפני כל מחזור
-- **מועד הוובינר** — `src/lib/site.ts` (תאריך, יום, שעות, `iso` ליומן).
+ה-CTA התחתון והפוטר נמצאים ב-`App.tsx`.
+
+## מה צריך לעדכן
+- **קופי וצילומי מסך** — `src/lib/site.ts` (כותרת, `SCREENSHOTS`). קבצי התמונות ב-`public/screenshots/`.
 - **משתני סביבה** — ראו `.env.example`:
-  - `VITE_LEAD_WEBHOOK_URL` — לאן נשלחות ההרשמות (`{ name, email, phone, marketingConsent, submittedAt }`).
-  - `VITE_WHATSAPP_GROUP_URL` — קישור לקבוצת ה-WhatsApp בעמוד התודה.
-  - `VITE_META_PIXEL_ID`, `GOOGLE_SHEET_WEBHOOK_URL`, `SITE_URL` — אופציונליים.
+  - `VITE_WHATSAPP_GROUP_URL` — קישור ההזמנה לקבוצה (חובה).
+  - `VITE_META_PIXEL_ID`, `VITE_GOOGLE_TAG_ID`, `VITE_GOOGLE_ADS_CONVERSION_LABEL`, `SITE_URL` — אופציונליים.
 - **תמונת OG לשיתוף** — `public/images/og-cover.jpg` (1200×630).
+
+## מעקב
+לחיצה על כפתור הצטרפות שולחת `Lead` + `JoinWhatsApp` (Meta Pixel) ו-`generate_lead` (Google Tag), פעם אחת לכל טעינת עמוד, עם מיקום הכפתור (`hero` / `bottom` / `sticky`).

@@ -1,49 +1,49 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import HeroSection from "./components/HeroSection";
-import ValueSection from "./components/ValueSection";
-import RegistrationSection from "./components/RegistrationSection";
+import ShowcaseSection from "./components/ShowcaseSection";
 import StickyMobileCTA from "./components/StickyMobileCTA";
-import ThankYouPage from "./components/ThankYouPage";
-import { initTracking, trackLead } from "./lib/track";
-
-// The registration form redirects to /thank-you on success.
-function isThankYouRoute() {
-  if (typeof window === "undefined") return false;
-  return window.location.pathname.replace(/\/+$/, "") === "/thank-you";
-}
+import Reveal from "./components/ui/Reveal";
+import WhatsAppButton from "./components/ui/WhatsAppButton";
+import { SITE } from "./lib/site";
+import { initTracking } from "./lib/track";
 
 export default function App() {
-  const [thankYou] = useState(isThankYouRoute);
-
-  // Analytics: page_view (once/session) + scroll-depth and time-on-page listeners.
-  // The thank-you page skips session analytics (so post-signup visits don't
-  // skew landing metrics) and only fires the Meta Pixel Lead event.
-  useEffect(() => {
-    if (thankYou) {
-      trackLead();
-      return;
-    }
-    return initTracking();
-  }, [thankYou]);
-
-  if (thankYou) return <ThankYouPage />;
+  // Meta Pixel + Google Tag page views (each a no-op when its id is unset).
+  useEffect(() => initTracking(), []);
 
   return (
     <div className="relative min-h-screen">
       <main>
         <HeroSection />
-        <ValueSection />
-        <RegistrationSection />
+        <ShowcaseSection />
+
+        {/* Bottom CTA */}
+        <section className="px-5 py-12 md:py-20" aria-labelledby="join-heading">
+          <Reveal>
+            <div className="mx-auto max-w-2xl rounded-2xl border border-drift/15 bg-ateneo/15 px-5 py-10 text-center shadow-card sm:px-10">
+              <h2
+                id="join-heading"
+                className="text-balance text-3xl font-extrabold leading-[1.15] tracking-tight text-cloud sm:text-4xl"
+              >
+                מקומך <span className="text-gold">בקהילה</span> מחכה לך
+              </h2>
+              <p className="mx-auto mt-3 max-w-lg text-balance text-lg leading-relaxed text-drift">
+                לחיצה אחת, ואתה בפנים. בלי טפסים ובלי התחייבות.
+              </p>
+              <div className="mx-auto mt-7 w-full max-w-md" data-cta>
+                <WhatsAppButton location="bottom">הצטרפות לקהילה בחינם ←</WhatsAppButton>
+              </div>
+            </div>
+          </Reveal>
+        </section>
       </main>
 
-      <footer className="px-5 pb-28 pt-10 text-center lg:pb-10">
-        <p className="text-lg font-extrabold tracking-tight text-cloud">
-          וובינר מנוע העסקאות ל-2 נכסים בחודש
-        </p>
-        <p className="mt-1 text-sm font-semibold text-drift">עם אוהד עוז</p>
+      <footer className="px-5 pb-28 pt-6 text-center lg:pb-10">
+        <p className="text-lg font-extrabold tracking-tight text-cloud">{SITE.brand}</p>
+        <p className="mt-1 text-sm font-semibold text-drift">עם {SITE.owner}</p>
         <p className="mx-auto mt-5 max-w-2xl text-sm leading-relaxed text-drift">
-          כל הזכויות שמורות · הוובינר הינו תוכן חינוכי ופרקטי ואינו מהווה ייעוץ
-          השקעות, ייעוץ מס או ייעוץ משפטי. תוצאות עשויות להשתנות בהתאם ליישום בפועל.
+          כל הזכויות שמורות · התוכן בקהילה הינו חינוכי בלבד ואינו מהווה ייעוץ השקעות,
+          ייעוץ מס או ייעוץ משפטי.
         </p>
       </footer>
 
