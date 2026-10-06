@@ -26,12 +26,18 @@ const DEFAULT_WHATSAPP_GROUP_URL = "https://tinyurl.com/mesahkimnadlan";
 export const WHATSAPP_GROUP_URL =
   import.meta.env.VITE_WHATSAPP_GROUP_URL?.trim() || DEFAULT_WHATSAPP_GROUP_URL;
 
-/** Community screenshots shown in the social-proof section (files live in public/screenshots/). */
+/** Community screenshots shown in the social-proof section, in display order (files live in public/screenshots/). */
 export const SCREENSHOTS: { src: string; width: number; height: number; alt: string }[] = [
   {
-    src: "/screenshots/chat-1.jpg",
-    width: 1044,
-    height: 340,
-    alt: "הודעת חבר בוואטסאפ: זה סדנא של 400 דולר פלוס, היה מטורף",
+    src: "/screenshots/first-deal.jpg",
+    width: 1205,
+    height: 698,
+    alt: "הודעת חבר בקבוצת הוואטסאפ: קנינו עכשיו את הנכס הראשון, זה פחות מפחיד ממה שחשבנו. תודה על הקבוצה",
+  },
+  {
+    src: "/screenshots/loan-types.png",
+    width: 800,
+    height: 1010,
+    alt: "פוסט בקבוצה שמסביר את שלושת סוגי ההלוואות לנדל״ן בארה״ב: הלוואות Fix&Flip ו-Hard Money, הלוואות DSCR והלוואות לפי יכולת ההחזר האישית",
   },
 ];

@@ -21,7 +21,7 @@ npm run preview  # תצוגה מקדימה של הבנייה
 | רכיב | תיאור |
 |------|-------|
 | `HeroSection.tsx` | תגית, כותרת, תת-כותרת ו-CTA ראשי ל-WhatsApp |
-| `ShowcaseSection.tsx` | צילומי מסך מהקהילה (הוכחה חברתית) |
+| `ShowcaseSection.tsx` | צילומי מסך מהקהילה (הוכחה חברתית), בעמודה אחת קריאה |
 | `StickyMobileCTA.tsx` | כפתור WhatsApp דביק בתחתית המובייל |
 | `ui/WhatsAppButton.tsx` | כפתור ההצטרפות: קישור לקבוצה + אירועי מעקב |
 

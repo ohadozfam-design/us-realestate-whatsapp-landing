@@ -4,11 +4,9 @@ import { SCREENSHOTS } from "../lib/site";
 /**
  * Social proof: real screenshots from the community (chats, deal wins,
  * discussions). Add files to public/screenshots/ and list them in SCREENSHOTS.
- * A single shot is centered; two or more flow into a two-column grid.
+ * Shots stack in one centered column so the chat text stays readable.
  */
 export default function ShowcaseSection() {
-  const single = SCREENSHOTS.length === 1;
-
   return (
     <section className="px-5 py-12 md:py-20" aria-labelledby="showcase-heading">
       <div className="mx-auto max-w-4xl">
@@ -25,11 +23,7 @@ export default function ShowcaseSection() {
         </Reveal>
 
         <Reveal delay={0.06}>
-          <ul
-            className={`mt-10 grid grid-cols-1 gap-4 ${
-              single ? "mx-auto max-w-2xl" : "sm:grid-cols-2"
-            }`}
-          >
+          <ul className="mx-auto mt-10 grid max-w-2xl grid-cols-1 gap-5">
             {SCREENSHOTS.map((shot) => (
               <li key={shot.src}>
                 <a

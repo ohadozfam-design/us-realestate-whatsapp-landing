@@ -20,3 +20,6 @@ examples/
 .vercel
 .env*
 !.env.example
+
+# Local screenshot source material (copied into public/screenshots/)
+exempels/
