@@ -55,7 +55,17 @@ export default function HeroSection() {
         <motion.div variants={item} className="mx-auto mt-10 w-full max-w-xl lg:max-w-2xl" data-cta>
           <WhatsAppButton location="hero">{SITE.ctaLabel}</WhatsAppButton>
           <p className="mt-5 text-balance text-base font-semibold text-muted">
-            לחיצה אחת · בלי טפסים · יוצאים מתי שרוצים
+            {/* One line from sm up; on phones the last item drops to its own
+                line (no dangling separator) under the first ones. */}
+            {SITE.ctaMicrocopy.map((part, i) => {
+              const last = i === SITE.ctaMicrocopy.length - 1;
+              return (
+                <span key={part} className={last ? "block sm:inline" : undefined}>
+                  {i > 0 && <span className={last ? "hidden sm:inline" : undefined}> · </span>}
+                  <span className="whitespace-nowrap">{part}</span>
+                </span>
+              );
+            })}
           </p>
         </motion.div>
       </motion.div>

@@ -9,6 +9,9 @@ export const SITE = {
     "ניתוחי עסקאות בזמן אמת, קשרים עם קבלנים ומתווכים בשטח, ושיח פתוח בין יזמים ומשקיעים שפועלים עכשיו בארה״ב.",
   // Label on every join button (hero, bottom and the mobile sticky bar).
   ctaLabel: "הצטרפות לקהילת הוואטסאפ (חינם)",
+  // Reassurance line under the hero CTA, joined with " · ". Each segment stays
+  // unbroken; on phones the last one gets its own line.
+  ctaMicrocopy: ["לחיצה אחת", "בלי טפסים", "100% ערך יזמות נדל״ן בארה״ב"],
   bottomHeadline: "מוכנים להפסיק לפעול לבד?",
   bottomSubheadline:
     "הצטרפו עכשיו לקהילה פעילה של יזמי נדל״ן בארה״ב. בלחיצה אחת אתם בפנים.",
