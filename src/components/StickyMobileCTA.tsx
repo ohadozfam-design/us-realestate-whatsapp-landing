@@ -42,7 +42,7 @@ export default function StickyMobileCTA() {
           style={{ paddingBottom: "calc(0.75rem + env(safe-area-inset-bottom))" }}
         >
           <motion.a
-            href={WHATSAPP_GROUP_URL || undefined}
+            href={WHATSAPP_GROUP_URL}
             target="_blank"
             rel="noopener noreferrer"
             onClick={() => trackJoinWhatsApp("sticky")}

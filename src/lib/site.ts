@@ -15,15 +15,16 @@ export const SITE = {
   footer: "קהילת נדל״ן ארה״ב © 2026. כל הזכויות שמורות.",
 } as const;
 
-/**
- * WhatsApp community invite link, inlined at BUILD time from
- * VITE_WHATSAPP_GROUP_URL (redeploy after changing it).
- */
-export const WHATSAPP_GROUP_URL = (import.meta.env.VITE_WHATSAPP_GROUP_URL ?? "").trim();
+/** Default community invite link, used when VITE_WHATSAPP_GROUP_URL is unset. */
+const DEFAULT_WHATSAPP_GROUP_URL = "https://tinyurl.com/mesahkimnadlan";
 
-if (!WHATSAPP_GROUP_URL) {
-  console.warn("[site] VITE_WHATSAPP_GROUP_URL is not set - the join buttons have no link.");
-}
+/**
+ * WhatsApp community invite link every join button points to. Override per
+ * environment with VITE_WHATSAPP_GROUP_URL (inlined at BUILD time, so
+ * redeploy after changing it); blank or unset falls back to the default.
+ */
+export const WHATSAPP_GROUP_URL =
+  import.meta.env.VITE_WHATSAPP_GROUP_URL?.trim() || DEFAULT_WHATSAPP_GROUP_URL;
 
 /** Community screenshots shown in the social-proof section (files live in public/screenshots/). */
 export const SCREENSHOTS: { src: string; width: number; height: number; alt: string }[] = [

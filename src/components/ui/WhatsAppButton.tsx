@@ -19,7 +19,7 @@ type WhatsAppButtonProps = {
 export default function WhatsAppButton({ children, location, className = "" }: WhatsAppButtonProps) {
   return (
     <motion.a
-      href={WHATSAPP_GROUP_URL || undefined}
+      href={WHATSAPP_GROUP_URL}
       target="_blank"
       rel="noopener noreferrer"
       onClick={() => trackJoinWhatsApp(location)}

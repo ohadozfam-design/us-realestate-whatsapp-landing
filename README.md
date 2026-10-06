@@ -30,7 +30,7 @@ npm run preview  # תצוגה מקדימה של הבנייה
 ## מה צריך לעדכן
 - **קופי וצילומי מסך** — `src/lib/site.ts` (כותרת, `SCREENSHOTS`). קבצי התמונות ב-`public/screenshots/`.
 - **משתני סביבה** — ראו `.env.example`:
-  - `VITE_WHATSAPP_GROUP_URL` — קישור ההזמנה לקבוצה (חובה).
+  - `VITE_WHATSAPP_GROUP_URL` — קישור ההזמנה לקבוצה (ברירת מחדל ב-`src/lib/site.ts`).
   - `VITE_META_PIXEL_ID`, `VITE_GOOGLE_TAG_ID`, `VITE_GOOGLE_ADS_CONVERSION_LABEL`, `SITE_URL` — אופציונליים.
 - **תמונת OG לשיתוף** — `public/images/og-cover.jpg` (1200×630).
 
