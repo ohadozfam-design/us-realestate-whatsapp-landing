@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import WhatsAppIcon from "./ui/WhatsAppIcon";
-import { WHATSAPP_GROUP_URL } from "../lib/site";
+import { SITE, WHATSAPP_GROUP_URL } from "../lib/site";
 import { trackJoinWhatsApp } from "../lib/track";
 
 /**
@@ -51,7 +51,7 @@ export default function StickyMobileCTA() {
             className="focus-ring flex w-full items-center justify-center gap-2 rounded-full bg-gold px-5 py-3.5 text-lg font-bold tracking-tight text-night shadow-cta transition-colors hover:bg-[#ffca82]"
           >
             <WhatsAppIcon className="h-5 w-5 shrink-0" />
-            הצטרפות לקהילה ←
+            {SITE.ctaLabel}
           </motion.a>
         </motion.div>
       )}

@@ -12,8 +12,6 @@ const item = {
   show: { opacity: 1, y: 0, transition: { duration: 0.6, ease: [0.22, 1, 0.36, 1] } },
 };
 
-const [headlineBefore, headlineAfter] = SITE.headline.split(SITE.headlineAccent);
-
 export default function HeroSection() {
   return (
     <section
@@ -29,10 +27,10 @@ export default function HeroSection() {
         {/* Badge */}
         <motion.div
           variants={item}
-          className="inline-flex items-center gap-2.5 rounded-full border border-drift/15 bg-cloud/[0.04] px-6 py-2.5 text-lg font-bold text-cloud"
+          className="inline-flex items-center gap-2.5 text-balance rounded-2xl border border-drift/15 bg-cloud/[0.04] px-4 py-2 text-[15px] font-bold text-cloud sm:rounded-full sm:px-6 sm:py-2.5 sm:text-lg"
         >
-          <span className="inline-flex h-2.5 w-2.5 rounded-full bg-[#25D366]" aria-hidden="true" />
-          קהילה סגורה · הצטרפות חינם
+          <span className="hidden h-2.5 w-2.5 shrink-0 rounded-full bg-[#25D366] sm:inline-flex" aria-hidden="true" />
+          {SITE.eyebrow}
         </motion.div>
 
         {/* Centered headline - stretches across the width on desktop */}
@@ -41,9 +39,8 @@ export default function HeroSection() {
           id="hero-heading"
           className="mx-auto mt-7 w-full max-w-5xl text-center font-extrabold leading-[1.15] text-balance tracking-tight text-cloud text-4xl sm:text-5xl lg:text-6xl"
         >
-          {headlineBefore}
-          <span className="text-gold">{SITE.headlineAccent}</span>
-          {headlineAfter}
+          {SITE.headline}
+          <span className="mt-1 block text-gold">{SITE.headlineAccent}</span>
         </motion.h1>
 
         {/* Subheadline */}
@@ -51,13 +48,12 @@ export default function HeroSection() {
           variants={item}
           className="mx-auto mt-6 max-w-2xl text-balance text-xl leading-relaxed text-drift sm:text-2xl"
         >
-          עסקאות אמיתיות, ניתוחי נכסים, שאלות ותשובות וקשרים עם אנשי מקצוע בשטח.{" "}
-          <strong className="font-extrabold text-cloud">הכול בקבוצה אחת.</strong>
+          {SITE.subheadline}
         </motion.p>
 
         {/* CTA */}
         <motion.div variants={item} className="mx-auto mt-9 w-full max-w-md" data-cta>
-          <WhatsAppButton location="hero">הצטרפות לקהילה בחינם ←</WhatsAppButton>
+          <WhatsAppButton location="hero">{SITE.ctaLabel}</WhatsAppButton>
           <p className="mt-4 text-balance text-base text-drift">
             לחיצה אחת · בלי טפסים · יוצאים מתי שרוצים
           </p>

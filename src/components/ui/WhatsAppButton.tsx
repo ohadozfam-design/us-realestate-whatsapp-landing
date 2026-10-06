@@ -26,9 +26,9 @@ export default function WhatsAppButton({ children, location, className = "" }: W
       whileHover={{ y: -2 }}
       whileTap={{ scale: 0.99 }}
       transition={{ type: "spring", stiffness: 400, damping: 26 }}
-      className={`focus-ring inline-flex w-full items-center justify-center gap-2.5 whitespace-nowrap rounded-full bg-gold px-6 sm:px-8 py-[17px] text-lg font-bold tracking-tight text-night shadow-cta transition-colors duration-200 hover:bg-[#ffca82] sm:text-xl ${className}`}
+      className={`focus-ring inline-flex w-full items-center justify-center gap-2 whitespace-nowrap rounded-full bg-gold px-4 py-[17px] text-[17px] font-bold tracking-tight text-night shadow-cta transition-colors duration-200 hover:bg-[#ffca82] sm:gap-2.5 sm:px-8 sm:text-xl ${className}`}
     >
-      <WhatsAppIcon className="h-6 w-6 shrink-0" />
+      <WhatsAppIcon className="h-5 w-5 shrink-0 sm:h-6 sm:w-6" />
       <span>{children}</span>
     </motion.a>
   );

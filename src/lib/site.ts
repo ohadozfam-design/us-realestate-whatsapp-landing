@@ -1,12 +1,18 @@
 // Central place for editable page copy and links.
 
 export const SITE = {
-  // Main headline (hero, <title>, og/twitter tags and og-cover.jpg mirror it).
-  // headlineAccent is the part of the headline rendered in gold.
-  headline: "קהילת WhatsApp סגורה למשקיעים ויזמי נדל״ן בארה״ב",
-  headlineAccent: "למשקיעים ויזמי נדל״ן בארה״ב",
-  brand: "קהילת משקיעי הנדל״ן בארה״ב",
-  owner: "אוהד עוז",
+  eyebrow: "קהילת הוואטסאפ של יזמי ומשקיעי נדל״ן בארה״ב",
+  // Hero H1: the plain line, then the gold accent line beneath it.
+  headline: "המקום שבו נסגרות עסקאות נדל״ן בארה״ב.",
+  headlineAccent: "בלי בולשיט, בלי פילטרים.",
+  subheadline:
+    "ניתוחי עסקאות בזמן אמת, קשרים עם קבלנים ומתווכים בשטח, ושיח פתוח בין יזמים ומשקיעים שפועלים עכשיו בארה״ב.",
+  // Label on every join button (hero, bottom and the mobile sticky bar).
+  ctaLabel: "הצטרפות לקהילת הוואטסאפ (חינם)",
+  bottomHeadline: "מוכנים להפסיק לפעול לבד?",
+  bottomSubheadline:
+    "הצטרפו עכשיו לקהילה פעילה של יזמי נדל״ן בארה״ב. בלחיצה אחת אתם בפנים.",
+  footer: "קהילת נדל״ן ארה״ב © 2026. כל הזכויות שמורות.",
 } as const;
 
 /**
