@@ -20,17 +20,17 @@ export default function App() {
         {/* Bottom CTA */}
         <section className="px-5 py-12 md:py-20" aria-labelledby="join-heading">
           <Reveal>
-            <div className="mx-auto max-w-2xl rounded-2xl border border-drift/15 bg-ateneo/15 px-3 py-10 text-center shadow-card sm:px-10">
+            <div className="mx-auto max-w-3xl rounded-3xl border border-line bg-white px-4 py-10 text-center shadow-card sm:px-10 sm:py-14">
               <h2
                 id="join-heading"
-                className="text-balance text-3xl font-extrabold leading-[1.15] tracking-tight text-cloud sm:text-4xl"
+                className="text-balance text-3xl font-extrabold leading-[1.15] tracking-tight text-ink sm:text-4xl"
               >
                 {SITE.bottomHeadline}
               </h2>
-              <p className="mx-auto mt-3 max-w-lg text-balance text-lg leading-relaxed text-drift">
+              <p className="mx-auto mt-3 max-w-lg text-balance text-lg leading-relaxed text-muted">
                 {SITE.bottomSubheadline}
               </p>
-              <div className="mx-auto mt-7 w-full max-w-md" data-cta>
+              <div className="mx-auto mt-8 w-full max-w-xl lg:max-w-2xl" data-cta>
                 <WhatsAppButton location="bottom">{SITE.ctaLabel}</WhatsAppButton>
               </div>
             </div>
@@ -39,8 +39,8 @@ export default function App() {
       </main>
 
       <footer className="px-5 pb-28 pt-6 text-center lg:pb-10">
-        <p className="text-sm font-semibold text-drift">{SITE.footer}</p>
-        <p className="mx-auto mt-3 max-w-2xl text-xs leading-relaxed text-drift/70">
+        <p className="text-sm font-semibold text-muted">{SITE.footer}</p>
+        <p className="mx-auto mt-3 max-w-2xl text-xs leading-relaxed text-muted">
           התוכן בקהילה הינו חינוכי בלבד ואינו מהווה ייעוץ השקעות, ייעוץ מס או ייעוץ משפטי.
         </p>
       </footer>

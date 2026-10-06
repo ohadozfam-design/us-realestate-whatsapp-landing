@@ -4,7 +4,7 @@
 
 ## סטאק
 - **Vite + React 18 + TypeScript**
-- **Tailwind CSS** (פלטת night/cloud/drift + זהב — מוגדרת ב-`tailwind.config.js`)
+- **Tailwind CSS** (פלטה בהירה בהשראת WhatsApp — מוגדרת ב-`tailwind.config.js`)
 - **Framer Motion** — מיקרו-אנימציות וגלילה
 - **lucide-react** — אייקונים
 - גופן **Assistant** (Google Fonts, נטען ב-`index.html`)

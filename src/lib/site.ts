@@ -2,7 +2,7 @@
 
 export const SITE = {
   eyebrow: "קהילת הוואטסאפ של יזמי ומשקיעי נדל״ן בארה״ב",
-  // Hero H1: the plain line, then the gold accent line beneath it.
+  // Hero H1: the plain line, then the green accent line beneath it.
   headline: "המקום שבו נסגרות עסקאות נדל״ן בארה״ב.",
   headlineAccent: "בלי בולשיט, בלי פילטרים.",
   subheadline:

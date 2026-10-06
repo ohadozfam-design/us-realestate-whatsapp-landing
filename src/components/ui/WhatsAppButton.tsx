@@ -12,9 +12,10 @@ type WhatsAppButtonProps = {
 };
 
 /**
- * The single conversion action: a real link to the WhatsApp community, so it
- * works without JS and supports long-press / open-in-new-tab. The click fires
- * the ad-tag events before the browser follows the link.
+ * The single conversion action: an oversized WhatsApp-green link to the
+ * community, so it works without JS and supports long-press / open-in-new-tab.
+ * The click fires the ad-tag events before the browser follows the link.
+ * On narrow phones the label wraps to two balanced lines instead of shrinking.
  */
 export default function WhatsAppButton({ children, location, className = "" }: WhatsAppButtonProps) {
   return (
@@ -23,13 +24,13 @@ export default function WhatsAppButton({ children, location, className = "" }: W
       target="_blank"
       rel="noopener noreferrer"
       onClick={() => trackJoinWhatsApp(location)}
-      whileHover={{ y: -2 }}
-      whileTap={{ scale: 0.99 }}
+      whileHover={{ y: -3 }}
+      whileTap={{ scale: 0.98 }}
       transition={{ type: "spring", stiffness: 400, damping: 26 }}
-      className={`focus-ring inline-flex w-full items-center justify-center gap-2 whitespace-nowrap rounded-full bg-gold px-4 py-[17px] text-[17px] font-bold tracking-tight text-night shadow-cta transition-colors duration-200 hover:bg-[#ffca82] sm:gap-2.5 sm:px-8 sm:text-xl ${className}`}
+      className={`focus-ring flex w-full items-center justify-center gap-3 rounded-3xl bg-wa-button px-6 py-5 text-xl font-extrabold leading-tight tracking-tight text-white shadow-wa transition-[background-color,box-shadow] duration-200 hover:bg-wa-dark hover:shadow-wa-hover sm:gap-4 sm:rounded-full sm:px-10 sm:py-6 sm:text-2xl lg:text-3xl ${className}`}
     >
-      <WhatsAppIcon className="h-5 w-5 shrink-0 sm:h-6 sm:w-6" />
-      <span>{children}</span>
+      <WhatsAppIcon className="h-9 w-9 shrink-0 sm:h-10 sm:w-10 lg:h-11 lg:w-11" />
+      <span className="text-balance text-center">{children}</span>
     </motion.a>
   );
 }

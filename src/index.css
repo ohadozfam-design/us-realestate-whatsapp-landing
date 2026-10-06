@@ -4,16 +4,18 @@
 
 @layer base {
   :root {
-    color-scheme: dark;
+    color-scheme: light;
   }
 
   html {
     scroll-behavior: smooth;
+    background-color: #f4f6f4;
   }
 
   body {
-    /* Crisp, flat Neverything base - no blurred gradient blobs. */
-    @apply bg-night text-cloud font-sans antialiased;
+    /* WhatsApp chat-wallpaper beige fading into a clean light gray. */
+    @apply text-ink font-sans antialiased;
+    background: linear-gradient(180deg, #efeae2 0%, #f4f6f4 100%);
     /* Ultra-readable base: 18px mobile, 20px desktop, generous line-height */
     font-size: 1.125rem; /* 18px */
     line-height: 1.6;
@@ -58,7 +60,7 @@
 @layer components {
   /* Hebrew eyebrow labels use natural letter spacing. */
   .eyebrow {
-    @apply inline-flex items-center text-sm font-bold tracking-normal text-gold;
+    @apply inline-flex items-center text-sm font-bold tracking-normal text-wa-deep;
   }
 }
 
@@ -67,13 +69,13 @@
     text-wrap: balance;
   }
 
-  /* One consistent, high-contrast keyboard focus ring (gold on a dark gap),
+  /* One consistent, high-contrast keyboard focus ring (ink on a light gap),
      drawn with box-shadow so it is visible on any surface including the CTA. */
   .focus-ring:focus-visible {
     outline: none;
     box-shadow:
-      0 0 0 2px #13181b,
-      0 0 0 4px #ffbf65;
+      0 0 0 3px #ffffff,
+      0 0 0 6px #111b21;
   }
 }
 
@@ -82,12 +84,12 @@
   width: 10px;
 }
 ::-webkit-scrollbar-track {
-  background: #13181b;
+  background: #f0f2f5;
 }
 ::-webkit-scrollbar-thumb {
-  background: rgba(204, 213, 218, 0.2);
+  background: rgba(17, 27, 33, 0.18);
   border-radius: 999px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(204, 213, 218, 0.35);
+  background: rgba(17, 27, 33, 0.3);
 }

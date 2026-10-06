@@ -38,7 +38,7 @@ export default function StickyMobileCTA() {
           animate={{ y: 0, opacity: 1 }}
           exit={{ y: 100, opacity: 0 }}
           transition={{ type: "spring", stiffness: 320, damping: 30 }}
-          className="fixed inset-x-0 bottom-0 z-50 border-t border-drift/15 bg-night/90 p-3 backdrop-blur-xl lg:hidden"
+          className="fixed inset-x-0 bottom-0 z-50 border-t border-line bg-white/90 p-3 backdrop-blur-xl lg:hidden"
           style={{ paddingBottom: "calc(0.75rem + env(safe-area-inset-bottom))" }}
         >
           <motion.a
@@ -48,9 +48,9 @@ export default function StickyMobileCTA() {
             onClick={() => trackJoinWhatsApp("sticky")}
             whileTap={{ scale: 0.98 }}
             transition={{ type: "spring", stiffness: 400, damping: 25 }}
-            className="focus-ring flex w-full items-center justify-center gap-2 rounded-full bg-gold px-5 py-3.5 text-lg font-bold tracking-tight text-night shadow-cta transition-colors hover:bg-[#ffca82]"
+            className="focus-ring flex w-full items-center justify-center gap-2.5 whitespace-nowrap rounded-full bg-wa-button px-4 py-4 text-lg font-extrabold tracking-tight text-white shadow-wa transition-colors hover:bg-wa-dark"
           >
-            <WhatsAppIcon className="h-5 w-5 shrink-0" />
+            <WhatsAppIcon className="h-7 w-7 shrink-0" />
             {SITE.ctaLabel}
           </motion.a>
         </motion.div>

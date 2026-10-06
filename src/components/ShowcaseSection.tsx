@@ -15,7 +15,7 @@ export default function ShowcaseSection() {
             <span className="eyebrow">מתוך הקהילה</span>
             <h2
               id="showcase-heading"
-              className="mx-auto mt-4 max-w-3xl text-balance text-[clamp(2rem,4.8vw,3.3rem)] font-extrabold leading-[1.15] tracking-tight text-cloud"
+              className="mx-auto mt-4 max-w-3xl text-balance text-[clamp(2rem,4.8vw,3.3rem)] font-extrabold leading-[1.15] tracking-tight text-ink"
             >
               ככה זה נראה מבפנים
             </h2>
@@ -30,7 +30,7 @@ export default function ShowcaseSection() {
                   href={shot.src}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="focus-ring block overflow-hidden rounded-2xl border border-drift/15 bg-cloud/[0.03] p-2 transition-colors hover:border-drift/30 sm:p-3"
+                  className="focus-ring block overflow-hidden rounded-2xl border border-line bg-white p-2 shadow-card transition-shadow hover:shadow-lg sm:p-3"
                   aria-label={`פתיחת צילום המסך בגודל מלא: ${shot.alt}`}
                 >
                   <img
@@ -39,7 +39,7 @@ export default function ShowcaseSection() {
                     height={shot.height}
                     loading="lazy"
                     decoding="async"
-                    className="h-auto w-full rounded-xl"
+                    className="h-auto w-full rounded-xl ring-1 ring-ink/5"
                     alt={shot.alt}
                   />
                 </a>

@@ -27,9 +27,9 @@ export default function HeroSection() {
         {/* Badge */}
         <motion.div
           variants={item}
-          className="inline-flex items-center gap-2.5 text-balance rounded-2xl border border-drift/15 bg-cloud/[0.04] px-4 py-2 text-[15px] font-bold text-cloud sm:rounded-full sm:px-6 sm:py-2.5 sm:text-lg"
+          className="inline-flex items-center gap-2.5 text-balance rounded-2xl border border-line bg-white/80 px-4 py-2 text-[15px] font-bold text-ink shadow-sm sm:rounded-full sm:px-6 sm:py-2.5 sm:text-lg"
         >
-          <span className="hidden h-2.5 w-2.5 shrink-0 rounded-full bg-[#25D366] sm:inline-flex" aria-hidden="true" />
+          <span className="hidden h-2.5 w-2.5 shrink-0 rounded-full bg-wa sm:inline-flex" aria-hidden="true" />
           {SITE.eyebrow}
         </motion.div>
 
@@ -37,24 +37,24 @@ export default function HeroSection() {
         <motion.h1
           variants={item}
           id="hero-heading"
-          className="mx-auto mt-7 w-full max-w-5xl text-center font-extrabold leading-[1.15] text-balance tracking-tight text-cloud text-4xl sm:text-5xl lg:text-6xl"
+          className="mx-auto mt-7 w-full max-w-5xl text-center font-extrabold leading-[1.15] text-balance tracking-tight text-ink text-4xl sm:text-5xl lg:text-6xl"
         >
           {SITE.headline}
-          <span className="mt-1 block text-gold">{SITE.headlineAccent}</span>
+          <span className="mt-1 block text-wa-deep">{SITE.headlineAccent}</span>
         </motion.h1>
 
         {/* Subheadline */}
         <motion.p
           variants={item}
-          className="mx-auto mt-6 max-w-2xl text-balance text-xl leading-relaxed text-drift sm:text-2xl"
+          className="mx-auto mt-6 max-w-2xl text-balance text-xl leading-relaxed text-muted sm:text-2xl"
         >
           {SITE.subheadline}
         </motion.p>
 
         {/* CTA */}
-        <motion.div variants={item} className="mx-auto mt-9 w-full max-w-md" data-cta>
+        <motion.div variants={item} className="mx-auto mt-10 w-full max-w-xl lg:max-w-2xl" data-cta>
           <WhatsAppButton location="hero">{SITE.ctaLabel}</WhatsAppButton>
-          <p className="mt-4 text-balance text-base text-drift">
+          <p className="mt-5 text-balance text-base font-semibold text-muted">
             לחיצה אחת · בלי טפסים · יוצאים מתי שרוצים
           </p>
         </motion.div>
