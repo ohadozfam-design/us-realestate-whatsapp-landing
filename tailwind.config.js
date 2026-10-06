@@ -20,8 +20,8 @@ export default {
       },
       boxShadow: {
         card: "0 1px 2px rgba(17,27,33,0.06), 0 14px 34px -18px rgba(17,27,33,0.22)",
-        wa: "0 18px 44px -12px rgba(37,211,102,0.75), 0 4px 12px -4px rgba(18,140,126,0.35)",
-        "wa-hover": "0 22px 54px -12px rgba(37,211,102,0.85), 0 6px 16px -4px rgba(18,140,126,0.4)",
+        glow: "0 18px 44px -12px rgba(37,211,102,0.75), 0 4px 12px -4px rgba(18,140,126,0.35)",
+        "glow-hover": "0 22px 54px -12px rgba(37,211,102,0.85), 0 6px 16px -4px rgba(18,140,126,0.4)",
       },
     },
   },

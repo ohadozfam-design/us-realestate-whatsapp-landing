@@ -27,7 +27,7 @@ export default function WhatsAppButton({ children, location, className = "" }: W
       whileHover={{ y: -3 }}
       whileTap={{ scale: 0.98 }}
       transition={{ type: "spring", stiffness: 400, damping: 26 }}
-      className={`focus-ring flex w-full items-center justify-center gap-3 rounded-3xl bg-wa-button px-6 py-5 text-xl font-extrabold leading-tight tracking-tight text-white shadow-wa transition-[background-color,box-shadow] duration-200 hover:bg-wa-dark hover:shadow-wa-hover sm:gap-4 sm:rounded-full sm:px-10 sm:py-6 sm:text-2xl lg:text-3xl ${className}`}
+      className={`focus-ring flex w-full items-center justify-center gap-3 rounded-3xl bg-wa-button px-6 py-5 text-xl font-extrabold leading-tight tracking-tight text-white shadow-glow transition-[background-color,box-shadow] duration-200 hover:bg-wa-dark hover:shadow-glow-hover sm:gap-4 sm:rounded-full sm:px-10 sm:py-6 sm:text-2xl lg:text-3xl ${className}`}
     >
       <WhatsAppIcon className="h-9 w-9 shrink-0 sm:h-10 sm:w-10 lg:h-11 lg:w-11" />
       <span className="text-balance text-center">{children}</span>

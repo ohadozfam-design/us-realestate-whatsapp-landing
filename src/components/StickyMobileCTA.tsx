@@ -48,7 +48,7 @@ export default function StickyMobileCTA() {
             onClick={() => trackJoinWhatsApp("sticky")}
             whileTap={{ scale: 0.98 }}
             transition={{ type: "spring", stiffness: 400, damping: 25 }}
-            className="focus-ring flex w-full items-center justify-center gap-2.5 whitespace-nowrap rounded-full bg-wa-button px-4 py-4 text-lg font-extrabold tracking-tight text-white shadow-wa transition-colors hover:bg-wa-dark"
+            className="focus-ring flex w-full items-center justify-center gap-2.5 whitespace-nowrap rounded-full bg-wa-button px-4 py-4 text-lg font-extrabold tracking-tight text-white shadow-glow transition-colors hover:bg-wa-dark"
           >
             <WhatsAppIcon className="h-7 w-7 shrink-0" />
             {SITE.ctaLabel}
